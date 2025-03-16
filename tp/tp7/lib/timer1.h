@@ -6,6 +6,7 @@ class Timer1
 {
 public:
     void setPrescaler(Prescaler value);
+    void setTimerMode(TimerMode mode);
     void setCompareOutputMode(OutputComparePin pin, CompareOutputMode mode);
     void setCompareValue(OutputComparePin pin, uint16_t value);
     void setTimerValue(uint16_t value);

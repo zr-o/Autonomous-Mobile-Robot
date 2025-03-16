@@ -13,7 +13,7 @@ enum class Prescaler
     NONE,
     PRESCALER_1,
     PRESCALER_8,
-    PRESCLAER_64,
+    PRESCALER_64,
     PRESCALER_256,
     PRESCALER_1024
 };
@@ -33,5 +33,7 @@ enum class OutputComparePin
     BOTH,
     NONE
 };
+
+
 
 #endif
