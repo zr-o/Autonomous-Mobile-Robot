@@ -23,18 +23,19 @@ MCU=atmega324pa
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=libstatique
-LIBTRG=$(PROJECTNAME).a
+PROJECTNAME=makefileExec
+
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC= $(wildcard *.cpp)
+PRJSRC= $(wildcard *.cpp)  
+
 # Inclusions additionnels (ex: -I/path/to/mydir)
-INC=
+INC= -I/Users/giovanni/Desktop/University/"TP 1900 Equipe"/INF1900-1621/tp/tp7/lib
 
 # Libraires a lier (ex: -lmylib)
-LIBS=
+LIBS = -L/Users/giovanni/Desktop/University/"TP 1900 Equipe"/INF1900-1621/tp/tp7/lib -lstatique
 
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
@@ -69,8 +70,6 @@ AVRDUDE=avrdude
 REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
-# Pour ajouter une bibliotheque statique
-AR=ar
 
 
 
@@ -136,13 +135,10 @@ OBJDEPS=$(CFILES:.c=.o) \
 
 # Make all permet simplement de compiler le projet
 #
-all: $(LIBTRG) $(TRG) $(HEXROMTRG)
+all: $(TRG) $(HEXROMTRG)
 
 # Implementation de la cible
-$(LIBTRG): $(OBJDEPS)
-	$(AR) -crs $(LIBTRG) $(OBJDEPS)
-
-$(TRG): $(OBJDEPS) $(LIBTRG)
+$(TRG): $(OBJDEPS)
 	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-lm $(LIBS)
 
@@ -174,7 +170,7 @@ install: $(HEXROMTRG)
 # Make clean permet d'effacer tout les fichiers generes
 # lors de la compilation
 clean:
-	 $(REMOVE) $(LIBTRG) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
+	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
 
 # Pour plus d'information sur les phony target, consulter:
 # http://bit.ly/1WBQe61
