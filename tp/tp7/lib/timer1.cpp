@@ -1,36 +1,37 @@
 #include "timer1.h"
 
-Timer1::Timer1(TimerMode mode) : mode_(mode) {
-
+Timer1::Timer1(TimerMode mode) : isExpired_(nullptr)
+{
     setTimerMode(mode);
     setPrescaler(Prescaler::PRESCALER_1);
-}
-
-
-Timer1::~Timer1() {
-    setPrescaler(Prescaler::NONE);
+    setCompareOutputModeA(CompareOutputMode::NORMAL);
+    setCompareOutputModeB(CompareOutputMode::NORMAL);
+    allowInterrupts(OutputComparePin::NONE);
 }
 
 void Timer1::setPrescaler(Prescaler value)
 {
+    cli();
+
     switch (value)
     {
     case Prescaler::NONE:
         TCCR1B &= ~((1 << CS12) | (1 << CS11) | (1 << CS10));
         break;
+
     case Prescaler::PRESCALER_1:
         TCCR1B &= ~((1 << CS12) | (1 << CS11));
-        TCCR1B |=  (1 << CS10);
+        TCCR1B |= (1 << CS10);
         break;
-    
+
     case Prescaler::PRESCALER_8:
-        TCCR1B &= ~(1 << CS10 | 1 << CS12);
+        TCCR1B &= ~((1 << CS10) | (1 << CS12));
         TCCR1B |= (1 << CS11);
         break;
 
     case Prescaler::PRESCALER_64:
         TCCR1B &= ~(1 << CS12);
-        TCCR1B |= (1 << CS10 | 1 << CS11);
+        TCCR1B |= (1 << CS10) | (1 << CS11);
         break;
 
     case Prescaler::PRESCALER_256:
@@ -40,158 +41,178 @@ void Timer1::setPrescaler(Prescaler value)
 
     case Prescaler::PRESCALER_1024:
         TCCR1B &= ~(1 << CS11);
-        TCCR1B |= (1 << CS10 | 1 << CS12);
-        break;
-    default:
+        TCCR1B |= (1 << CS10) | (1 << CS12);
         break;
     }
+
+    sei();
 }
 
 void Timer1::setTimerMode(TimerMode mode)
 {
+    cli();
+
     switch (mode)
     {
-        case TimerMode::NORMAL:
-            TCCR1A &= ~((1 << WGM11) | (1 << WG10));
-            TCCR1B &= ~(1 << WG12);
-            break;
-
-        case TimerMode::CTC:
-
-            TCCR1A &= ~((1 << WGM11) | (1 << WG10));
-            TCCR1B |= (1 << WGM12);
-            break;
-
-        case TimerMode::PWM:
-
-            TCCR1A |= (1 << WGM10);
-            TCCR1A &= ~(1 << WG11);
-            TCCR1B &= ~(1 << WGM12);
-            TCCR1C = 0;
-            break;
-
-        default:
-            break;
-    }
-}
-
-void Timer1::setCompareOutputMode(OutputComparePin pin, CompareOutputMode mode) {
-
-    uint8_t compareOutput0 = ((pin == OutputComparePin::A) ? COM1A0 : COM1B0);
-    uint8_t compareOutput1= ((pin == OutputComparePin::A) ? COM1A1 : COM1B1);
-
-    switch (mode) {
-
-        case CompareOutputMode::CLEAR:
-
-            TCCR1A &= ~(1 << compareOutput0);
-            TCCR1A |= (1 << compareOutput1);
-            break;
-
-        case CompareOutputMode::NORMAL:
-
-            TCCR1A &= ~((1 << compareOutput0 ) | (1 << compareOutput1));
-            break;
-
-        case CompareOutputMode::TOGGLE:
-
-            TCCR1A &= ~(1 << compareOutput1);
-            TCCR1A |= (1 << compareOutput0);
-            break;
-        case CompareOutputMode::SET:
-
-            TCCR1A |= (1 << compareOutput0) | (1 << compareOutput1);
+    case TimerMode::NORMAL:
+        TCCR1A &= ~((1 << WGM11) | (1 << WGM10));
+        TCCR1B &= ~(1 << WGM12);
+        TCCR1C = 0;
         break;
 
-        default:
-            break;
-    }   
+    case TimerMode::CTC:
+        TCCR1A &= ~((1 << WGM11) | (1 << WGM10));
+        TCCR1B |= (1 << WGM12);
+        TCCR1C = 0;
+        break;
 
+    case TimerMode::PWM:
+        TCCR1A |= (1 << WGM10);
+        TCCR1A &= ~(1 << WGM11);
+        TCCR1B &= ~(1 << WGM12);
+        TCCR1C = 0;
+        break;
+    }
+
+    sei();
 }
 
-void Timer1::setCompareValue(OutputComparePin pin, uint8_t value) {
+void Timer1::setCompareOutputModeA(CompareOutputMode mode)
+{
+    cli();
+
+    switch (mode)
+    {
+    case CompareOutputMode::CLEAR:
+        TCCR1A &= ~(1 << COM1A0);
+        TCCR1A |= (1 << COM1A1);
+        break;
+
+    case CompareOutputMode::NORMAL:
+        TCCR1A &= ~((1 << COM1A0) | (1 << COM1A1));
+        break;
+
+    case CompareOutputMode::TOGGLE:
+        TCCR1A &= ~(1 << COM1A1);
+        TCCR1A |= (1 << COM1A0);
+        break;
+
+    case CompareOutputMode::SET:
+        TCCR1A |= (1 << COM1A0) | (1 << COM1A1);
+        break;
+    }
+
+    sei();
+}
+
+void Timer1::setCompareOutputModeB(CompareOutputMode mode)
+{
+    cli();
+
+    switch (mode)
+    {
+    case CompareOutputMode::CLEAR:
+        TCCR1A &= ~(1 << COM1B0);
+        TCCR1A |= (1 << COM1B1);
+        break;
+
+    case CompareOutputMode::NORMAL:
+        TCCR1A &= ~((1 << COM1B0) | (1 << COM1B1));
+        break;
+
+    case CompareOutputMode::TOGGLE:
+        TCCR1A &= ~(1 << COM1B1);
+        TCCR1A |= (1 << COM1B0);
+        break;
+
+    case CompareOutputMode::SET:
+        TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
+        break;
+    }
+
+    sei();
+}
+
+void Timer1::setCompareValue(OutputComparePin pin, uint16_t value)
+{
+    cli();
 
     switch (pin)
     {
-        case OutputComparePin::A:
-            
-            OCR1A = value;
-            break;
+    case OutputComparePin::A:
+        OCR1A = value;
+        break;
 
-        case OutputComparePin::B:
-            
-            OCR1B = value;
-            break;
+    case OutputComparePin::B:
+        OCR1B = value;
+        break;
 
-        case OutputComparePin::BOTH:
-            
-            OCR1A = value;
-            OCR1B = value;
-            break;
-        
-        default:
-            break;
+    case OutputComparePin::BOTH:
+        OCR1A = value;
+        OCR1B = value;
+        break;
+
+    case OutputComparePin::NONE:
+        break;
     }
+
+    sei();
 }
 
-void Timer1::setTimerValue(uint16_t value) {
-
+void Timer1::setTimerValue(uint16_t value)
+{
     cli();
+
     TCNT1 = value;
-    sei();
 
+    sei();
 }
 
-void Timer1::allowInterrupts(OutputComparePin pin, bool enable){
-
+void Timer1::allowInterrupts(OutputComparePin pin)
+{
     cli();
 
-    if(enable) {
+    switch (pin)
+    {
+    case OutputComparePin::A:
+        TIMSK1 &= ~(1 << OCIE1B);
+        TIMSK1 |= (1 << OCIE1A);
+        break;
 
-        switch (pin) {
+    case OutputComparePin::B:
+        TIMSK1 &= ~(1 << OCIE1A);
+        TIMSK1 |= (1 << OCIE1B);
+        break;
 
-            case OutputComparePin::A:
-                
-                TIMSK1 &= ~(1 << OCIE1B);
-                TIMSK1 |= (1 << OCIE1A);
-                break;
+    case OutputComparePin::BOTH:
+        TIMSK1 |= (1 << OCIE1A | 1 << OCIE1B);
+        break;
 
-
-            case OutputComparePin::B:
-                
-                TIMSK1 &= ~(1 << OCIE1A);
-                TIMSK1 |= (1 << OCIE1B);
-                break;
-
-            case OutputComparePin::BOTH:
-                
-                TIMSK1 |= (1 << OCIE1A | 1 << OCIE1B);
-                break;
-
-            default:
-                break;
-        }
-
-    }
-
-    else {
-
+    case OutputComparePin::NONE:
         TIMSK1 &= ~(1 << OCIE1A | 1 << OCIE1B);
-
+        break;
     }
-
 
     sei();
-
-
 }
 
-void Timer1::delayMs(uint16_t delay) {
+void Timer1::initializeTimerForDelays(volatile bool& gIsExpired)
+{
+    isExpired_ = &gIsExpired;
 
+    setPrescaler(Prescaler::PRESCALER_1024);
+    setTimerMode(TimerMode::CTC);
+}
+void Timer1::startTimer(uint16_t calculatedDelay)
+{
+    *isExpired_ = false;
 
+    setTimerValue(0);
+    setCompareValue(OutputComparePin::A, calculatedDelay);
+    allowInterrupts(OutputComparePin::A);
+}
 
-    setTimerValue();
-    setPrescaler();
-    setCompareValue
-
+bool Timer1::isExpired()
+{
+    return *isExpired_;
 }

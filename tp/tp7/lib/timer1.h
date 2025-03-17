@@ -7,14 +7,16 @@ class Timer1
 public:
     void setPrescaler(Prescaler value);
     void setTimerMode(TimerMode mode);
-    void setCompareOutputMode(OutputComparePin pin, CompareOutputMode mode);
+    void setCompareOutputModeA(CompareOutputMode mode);
+    void setCompareOutputModeB(CompareOutputMode mode);
     void setCompareValue(OutputComparePin pin, uint16_t value);
     void setTimerValue(uint16_t value);
-    void allowInterrupts(OutputComparePin pin, bool enable);
-    void delayMs(uint16_t delay);
+    void allowInterrupts(OutputComparePin pin);
+    void initializeTimerForDelays(volatile bool& gIsExpired);
+    void startTimer(uint16_t calculatedDelay);
+    bool isExpired();
     Timer1(TimerMode mode);
-    ~Timer1();
 
 private:
-    ModeMinuterie mode_;
+    volatile bool* isExpired_;
 };
