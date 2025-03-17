@@ -1,14 +1,15 @@
 #include "debug.h"
 
-void DEBUG::DebugToRs232(const char* message) {
+void Debug::display(const char *message)
+{
     RS232 writer = RS232();
-    writer.write(message);  // Envoie directement la chaîne
+    writer.write(message);
 }
 
-// Fonction qui prend un entier
-void DEBUG::DebugToRs232(int x) {
+void Debug::display(const uint16_t x)
+{
     RS232 writer = RS232();
     char buffer[50];
-    sprintf(buffer, "%d", x);  // Convertit l'entier en chaîne
-    writer.write(buffer);  // Envoie la chaîne convertie
+    sprintf(buffer, "debugging value: %d", x);
+    writer.write(buffer);  
 }
