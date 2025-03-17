@@ -34,9 +34,13 @@ PRJSRC= $(wildcard *.cpp)
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC= -I/../lib
 #-I/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib
+#-I/../lib
+
 
 # Libraires a lier (ex: -lmylib)
-LIBS = -L/../-llibstatique
+LIBS = -L../lib -lstatic
+#-L/../lib/lib -lstatique
+#-L/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib -lstatique
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
 OPTLEVEL=s
