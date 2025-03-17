@@ -4,20 +4,20 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-
-enum class ButtonType{
+enum class ButtonType
+{
     MOTHERBOARD,
     EXTERN
 };
 
-class Button {
-
-    public:
-    Button(ButtonType type, volatile bool* gButton);
+class Button
+{
+public:
+    Button(ButtonType type, volatile bool *gButton);
     bool isPressed();
 
-    private:
-    volatile bool* isPressed_;
+private:
+    volatile bool *isPressed_;
     void activateExternalInterrupt();
     ButtonType type_;
 };
