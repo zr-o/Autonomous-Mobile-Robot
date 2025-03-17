@@ -29,7 +29,7 @@ PROJECTNAME=libr
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC=timer1.cpp
+PRJSRC=timer2.cpp timer1.cpp timer0.cpp
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC=

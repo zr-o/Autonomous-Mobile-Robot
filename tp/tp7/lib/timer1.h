@@ -1,3 +1,6 @@
+#ifndef TIMER_1_H
+#define TIMER_1_H
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "timer_definitions.h"
@@ -20,3 +23,5 @@ public:
 private:
     volatile bool* isExpired_;
 };
+
+#endif

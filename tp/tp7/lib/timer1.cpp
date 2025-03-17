@@ -35,7 +35,7 @@ void Timer1::setPrescaler(Prescaler value)
         break;
 
     case Prescaler::PRESCALER_256:
-        TCCR1B &= ~(1 << CS10 | 1 << CS11);
+        TCCR1B &= ~((1 << CS10) | (1 << CS11));
         TCCR1B |= (1 << CS12);
         break;
 
