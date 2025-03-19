@@ -1,10 +1,12 @@
 #include "button.h"
 
-Button::Button(ButtonType type, volatile bool *gButton) : isPressed_(gButton), type_(type)
+Button::Button(ButtonType type, volatile bool *gButton) : button_(gButton), type_(type)
 {
+    Ports::setPinMode(PortMode::READ, Port::D, Pin::N2);
+
     if (type_ == ButtonType::EXTERN)
     {
-        *isPressed_ = 1;
+        *button_ = 1;
     }
 
     activateExternalInterrupt();
@@ -25,10 +27,10 @@ bool Button::isPressed()
 {
     if (type_ == ButtonType::EXTERN)
     {
-        return !(*isPressed_);
+        return !(*button_);
     }
     else
     {
-        return *isPressed_;
+        return *button_;
     }
 }
