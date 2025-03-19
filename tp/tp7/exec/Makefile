@@ -32,7 +32,7 @@ PROJECTNAME=makefileExec
 PRJSRC= $(wildcard *.cpp)  
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
-INC= -I ../lib
+INC= -I../lib
 #-I/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib
 #-I/../lib
 
@@ -74,6 +74,10 @@ AVRDUDE=avrdude
 REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
+#pour make la librarie
+LIB_MAKE=make -C ../lib
+#pour make debug
+DEBUG= make -C ../lib debug.o
 
 
 
@@ -109,6 +113,7 @@ HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex
 
 
 
+
 ####### Definition de tout les fichiers objets #######
 
 # Cette fonction permet de differencier les fichiers .c
@@ -135,14 +140,21 @@ OBJDEPS=$(CFILES:.c=.o) \
 # En plus de la commande make qui permet de compiler
 # votre projet, vous pouvez utilisez les commandes
 # make all, make install et make clean
-.PHONY: all install clean
+.PHONY: all install debug clean
 
 # Make all permet simplement de compiler le projet
 #
-all: $(TRG) $(HEXROMTRG)
+all: lib $(TRG) $(HEXROMTRG)
 
+lib: 
+	$(LIB_MAKE)
+
+debug : CXXFLAGS += -DDEBUG_H
+debug :  all
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
+	$(LIB_MAKE)
+	$(DEBUG) CXXFLAGS="$(CXXFLAGS)"
 	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-lm $(LIBS)
 
@@ -174,6 +186,7 @@ install: $(HEXROMTRG)
 # Make clean permet d'effacer tout les fichiers generes
 # lors de la compilation
 clean:
+	$(LIB_MAKE) clean
 	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
 
 # Pour plus d'information sur les phony target, consulter:

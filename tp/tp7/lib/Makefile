@@ -70,7 +70,7 @@ REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
 # Pour ajouter une bibliotheque statique
-AR=ar
+AR=avr-ar
 
 
 
@@ -135,15 +135,15 @@ OBJDEPS=$(CFILES:.c=.o) \
 .PHONY: all install clean
 
 # Make all permet simplement de compiler le projet
-#
-all: $(LIBTRG) $(TRG) $(HEXROMTRG)
+# $(TRG) $(HEXROMTRG)
+all: $(LIBTRG)
 
 # Implementation de la cible
 $(LIBTRG): $(OBJDEPS)
 	$(AR) -crs $(LIBTRG) $(OBJDEPS)
 
-$(TRG): $(OBJDEPS) $(LIBTRG)
-	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
+# $(TRG): $(OBJDEPS) $(LIBTRG)
+# $(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-lm $(LIBS)
 
 # Production des fichiers object
@@ -154,6 +154,7 @@ $(TRG): $(OBJDEPS) $(LIBTRG)
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $<
 
+
 # Verification des dependances (header dependencies)
 -include *.d
 
@@ -161,8 +162,9 @@ $(TRG): $(OBJDEPS) $(LIBTRG)
 # http://bit.ly/2580FU8
 
 # Production des fichiers hex a partir des fichiers elf
-%.hex: %.elf
-	$(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
+
+# %.hex: %.elf
+# $(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
 
 # Make install permet de compiler le projet puis
 # d'ecrire le programme en memoire flash dans votre
