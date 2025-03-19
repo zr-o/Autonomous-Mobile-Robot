@@ -18,7 +18,7 @@ private:
     Debug();
 };
 
-#define DEBUG_PRINT(x) Debug::write(x)
+#define DEBUG_PRINT(x) Debug::display(x)
 
 #else
 

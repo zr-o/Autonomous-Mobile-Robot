@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "ports.h"
 
 enum class ButtonType
 {
@@ -17,7 +18,7 @@ public:
     bool isPressed();
 
 private:
-    volatile bool *isPressed_;
+    volatile bool *button_;
     void activateExternalInterrupt();
     ButtonType type_;
 };

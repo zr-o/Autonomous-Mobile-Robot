@@ -32,11 +32,11 @@ enum class PortMode
 class Ports
 {
 public:
-    void setPinMode(PortMode mode, Port port, Pin pin);
-    uint8_t readPort(Port port);
-    void writePort(Port port, uint8_t value);
-    bool readPin(Port port, Pin pin);
-    void writePin(Port port, Pin pin, bool value);
+    static void setPinMode(PortMode mode, Port port, Pin pin);
+    static uint8_t readPort(Port port);
+    static void writePort(Port port, uint8_t value);
+    static bool readPin(Port port, Pin pin);
+    static void writePin(Port port, Pin pin, bool value);
 };
 
 #endif

@@ -14,14 +14,13 @@ enum class Color
 class Led
 {
 public:
-    Led(Ports *portsUtility, Port port, Pin pinA, Pin pinB);
+    Led(Port port, Pin pinA, Pin pinB);
     void lightUp(Color color);
 
 private:
     Port port_;
     Pin pinA_;
     Pin pinB_;
-    Ports *portsUtility_;
 };
 
 #endif
