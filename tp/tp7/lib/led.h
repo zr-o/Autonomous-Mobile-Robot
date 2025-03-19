@@ -15,7 +15,6 @@ class Led
 {
 public:
     Led(Ports *portsUtility, Port port, Pin pinA, Pin pinB);
-    ~Led();
     void lightUp(Color color);
 
 private:
