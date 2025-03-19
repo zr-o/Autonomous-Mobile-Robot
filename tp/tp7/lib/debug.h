@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DEBUG_H
 #ifdef DEBUG_H
 
 class Debug

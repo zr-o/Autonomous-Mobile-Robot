@@ -149,8 +149,8 @@ all: lib $(TRG) $(HEXROMTRG)
 lib: 
 	$(LIB_MAKE)
 
-debug : CXXFLAGS += -DDEBUG_H
-debug :  all
+debug : CXXFLAGS += -DDEBUG
+debug : all
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
 	$(LIB_MAKE)

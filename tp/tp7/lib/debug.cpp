@@ -1,3 +1,4 @@
+#ifdef DEBUG_H
 #include "debug.h"
 
 void Debug::display(const char *message)
@@ -13,3 +14,5 @@ void Debug::display(const uint16_t x)
     sprintf(buffer, "debugging value: %d", x);
     writer.write(buffer);  
 }
+
+#endif
