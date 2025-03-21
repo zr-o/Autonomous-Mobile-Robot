@@ -6,10 +6,6 @@
 #include "led.h"
 #include "ports.h"
 #include "debug.h"
-<<<<<<< HEAD
-=======
-
->>>>>>> 648598c78ea985aaa4eb4b2367241a21fdc42fa0
 
 #define DELAI_REBOND_MS 10
 
@@ -43,25 +39,6 @@ int main()
         uint16_t x = 50000;
         Debug::display(x);
 
-<<<<<<< HEAD
         _delay_ms(1000);
     }
-=======
-while (true){
-
-    DEBUG_PRINT("test");
-    _delay_ms(1000);
-
-    if(button.isPressed()){
-        led.lightUp(Color::GREEN);
-    }
-    else{
-        led.lightUp(Color::OFF);
-    }
-
-}
-
-
-
->>>>>>> 648598c78ea985aaa4eb4b2367241a21fdc42fa0
 }
