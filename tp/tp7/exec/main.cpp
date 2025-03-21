@@ -9,18 +9,18 @@
 
 #define DELAI_REBOND_MS 10
 
-volatile bool gBouton = false;
+volatile bool gButton = false;
 volatile bool gExpiredTimer = false;
 
 ISR(INT0_vect)
 {
-    gBouton = true;
+    gButton = true;
 
     _delay_ms(DELAI_REBOND_MS);
 
     if (!(PIND & (1 << PD2)))
     {
-        gBouton = 0;
+        gButton = 0;
     }
 }
 
@@ -33,22 +33,20 @@ ISR(TIMER1_COMPA_vect)
 
 int main()
 {
- 
-    Ports portsUtility;
-    //Ports* portsUtilityPtr = &portsUtility;
 
-    Led led(&portsUtility, Port::C, Pin::N7, Pin::N8);
+Button button(ButtonType::MOTHERBOARD, &gButton);
+Led led(Port::A, Pin::N1, Pin::N2);
 
-    led.lightUp(Color::GREEN);
+while (true){
 
-    _delay_ms(2000);
+    if(button.isPressed()){
+        led.lightUp(Color::RED);
+    }
+    else{
+        led.lightUp(Color::OFF);
+    }
 
-    led.lightUp(Color::RED);
-
-    _delay_ms(2000);
-
-    led.lightUp(Color::OFF);
-
+}
 
 
 }
