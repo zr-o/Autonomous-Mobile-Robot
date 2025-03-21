@@ -32,13 +32,13 @@ PROJECTNAME=makefileExec
 PRJSRC = $(wildcard *.cpp)
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
-INC= -I../lib
+INC= -I../tp7/lib
 #-I/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib
 #-I/../lib
 
 
 # Libraires a lier (ex: -lmylib)
-LIBS = -L../lib -lstatic
+LIBS = -L../tp7/lib -lstatic
 #-L/../lib/lib -lstatique
 #-L/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib -lstatique
 # Niveau d'optimization

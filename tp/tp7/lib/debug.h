@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 648598c78ea985aaa4eb4b2367241a21fdc42fa0
 #ifndef DEBUG_H
 #define DEBUG_H
 
@@ -5,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
+<<<<<<< HEAD
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Debug::display((x))
 
@@ -13,6 +18,8 @@
 
 #endif
 
+=======
+>>>>>>> 648598c78ea985aaa4eb4b2367241a21fdc42fa0
 class Debug
 {
 public:
@@ -24,5 +31,20 @@ private:
     Debug() = default;
 };
 
+<<<<<<< HEAD
+=======
+
+
+#ifdef DEBUG
+#define DEBUG_PRINT(x) Debug::display(x)
+#else
+#define DEBUG_PRINT(x) \
+    do                 \
+    {                  \
+    } while (0) // code mort
+>>>>>>> 648598c78ea985aaa4eb4b2367241a21fdc42fa0
 
 #endif
+
+#endif
+
