@@ -1,7 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <avr/io.h>
 #include <avr/interrupt.h>
 #include "ports.h"
 

@@ -1,33 +1,46 @@
 #include "rs232.h"
 
+RS232 RS232::RS232_;
+
 RS232::RS232()
 {
-
     UBRR0H = 0;
-
     UBRR0L = 0xCF;
+    UCSR0A = 0X00; // Register containing flags and configurations
 
-    UCSR0A = 0X00; // Registre qui contient seuleument des flags et des configurations qui nous interesse pas
-
-    UCSR0B |= (1 << TXEN0); // Active la transmission
-
-    UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00); // Format des trames: 8 bits, 1 stop bits, sans parité
+    UCSR0B |= (1 << TXEN0) | (1 << RXEN0);   // Enable transmission
+    UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00); // 8 bits, 1 stop bit, no parity
 }
 
-void RS232::write(const char *message)
+void RS232::sendData(const uint8_t data)
 {
-    uint8_t length = 0;
-
-    while (message[length] != '\0')
+    while (!(UCSR0A & (1 << UDRE0)))
     {
-        length++;
     }
+    UDR0 = data;
+}
 
-    for (uint8_t i = 0; i < length; i++)
+void RS232::sendData(const uint8_t *data, uint16_t length)
+{
+    for (uint16_t i = 0; i < length; i++)
     {
-        while (!(UCSR0A & (1 << UDRE0)))
-        { 
-        }
-        UDR0 = message[i]; 
+        sendData(data[i]);
+    }
+}
+
+uint8_t RS232::receiveData()
+{
+    while (!(UCSR0A & (1 << RXC0)))
+    {
+
+    }
+    return UDR0;
+}
+
+void RS232::receiveData(uint8_t *data, uint16_t length)
+{
+    for (uint16_t i = 0; i < length; i++)
+    {
+        data[i] = receiveData(); 
     }
 }

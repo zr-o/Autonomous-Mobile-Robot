@@ -2,16 +2,21 @@
 #define RS232_H
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
-#include "memoire_24.h"
-
-
 
 class RS232
 {
 public:
+    static void sendData(const uint8_t data);
+    static void sendData(const uint8_t *data, uint16_t length);
+    static uint8_t receiveData();
+    static void receiveData(uint8_t *data, uint16_t length);
+
+    RS232(RS232 &other) = delete;
+    void operator=(const RS232 &other) = delete;
+
+private:
     RS232();
-    void write(const char* message);
+    static RS232 RS232_;
 };
 
 #endif

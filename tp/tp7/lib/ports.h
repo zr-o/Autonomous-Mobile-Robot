@@ -37,6 +37,9 @@ public:
     static void writePort(Port port, uint8_t value);
     static bool readPin(Port port, Pin pin);
     static void writePin(Port port, Pin pin, bool value);
+
+private:
+    Ports() = default;
 };
 
 #endif

@@ -1,18 +1,27 @@
-#ifdef DEBUG_H
 #include "debug.h"
+
+static const uint8_t MAX_BUFFER_SIZE = 50; // Dont use too much memory
 
 void Debug::display(const char *message)
 {
-    RS232 writer = RS232();
-    writer.write(message);
+    char buffer[MAX_BUFFER_SIZE];
+    snprintf(buffer, MAX_BUFFER_SIZE, "%s\n", message);
+
+    RS232::sendData((uint8_t*)buffer, strlen(buffer));
+}
+
+void Debug::display(const uint8_t x)
+{
+    char buffer[MAX_BUFFER_SIZE];
+    snprintf(buffer, MAX_BUFFER_SIZE, "debugging value: %u\n", x);
+
+    RS232::sendData((uint8_t*)buffer, strlen(buffer));
 }
 
 void Debug::display(const uint16_t x)
 {
-    RS232 writer = RS232();
-    char buffer[50];
-    sprintf(buffer, "debugging value: %d", x);
-    writer.write(buffer);  
-}
+    char buffer[MAX_BUFFER_SIZE];
+    snprintf(buffer, MAX_BUFFER_SIZE, "debugging value: %u\n", x);
 
-#endif
+    RS232::sendData((uint8_t*)buffer, strlen(buffer));
+}
