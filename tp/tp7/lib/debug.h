@@ -1,8 +1,10 @@
+
+#ifndef DEBUG_H
+#define DEBUG_H
+
 #include "rs232.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-#ifdef DEBUG_H
 
 class Debug
 {
@@ -17,13 +19,17 @@ private:
     Debug();
 };
 
+
+
+#ifdef DEBUG
 #define DEBUG_PRINT(x) Debug::display(x)
-
 #else
-
 #define DEBUG_PRINT(x) \
     do                 \
     {                  \
     } while (0) // code mort
 
 #endif
+
+#endif
+

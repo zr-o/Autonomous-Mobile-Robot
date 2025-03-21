@@ -29,7 +29,7 @@ PROJECTNAME=makefileExec
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC= $(wildcard *.cpp)  
+PRJSRC = $(wildcard *.cpp)
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
 INC= -I../lib
@@ -113,7 +113,6 @@ HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex
 
 
 
-
 ####### Definition de tout les fichiers objets #######
 
 # Cette fonction permet de differencier les fichiers .c
@@ -127,12 +126,12 @@ CPPFILES=$(filter %.cpp, $(PRJSRC))
 OBJDEPS=$(CFILES:.c=.o) \
 	$(CPPFILES:.cpp=.o)
 	
+	
 # Pour plus d'information sur cette section, consulter :
 # http://bit.ly/257R53E	
 # Les fonctions $(filter pattern…,text) &
 # $(patsubst pattern,replacement,text) sont pertinentes
 	
-
 
 ####### Creation des commandes du Makefile ####### 
 
@@ -149,8 +148,13 @@ all: lib $(TRG) $(HEXROMTRG)
 lib: 
 	$(LIB_MAKE)
 
+debug : 
+	$(LIB_MAKE)
 debug : CXXFLAGS += -DDEBUG
-debug : all
+debug : CFLAGS += -DDEBUG
+debug : $(TRG) $(HEXROMTRG)
+debug : clean all
+
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
 	$(LIB_MAKE)
@@ -164,7 +168,7 @@ $(TRG): $(OBJDEPS)
 	$(CC) $(CFLAGS) -c $<
 # De C++ a objet
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(CXXFLAGS) -c $<
+	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< 
 
 # Verification des dependances (header dependencies)
 -include *.d
