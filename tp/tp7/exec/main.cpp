@@ -37,8 +37,7 @@ int main()
     while (true)
     {
         uint16_t x = 50000;
-        Debug::display(x);
-
+        DEBUG_PRINT(x);
         _delay_ms(1000);
     }
 }
