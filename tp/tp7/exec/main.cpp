@@ -5,6 +5,7 @@
 #include "button.h"
 #include "led.h"
 #include "ports.h"
+#include "debug.h"
 
 
 #define DELAI_REBOND_MS 10
@@ -39,14 +40,18 @@ Led led(Port::A, Pin::N1, Pin::N2);
 
 while (true){
 
+    DEBUG_PRINT("test");
+    _delay_ms(1000);
+
     if(button.isPressed()){
-        led.lightUp(Color::RED);
+        led.lightUp(Color::GREEN);
     }
     else{
         led.lightUp(Color::OFF);
     }
 
 }
+
 
 
 }
