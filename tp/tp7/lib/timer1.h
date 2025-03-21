@@ -18,7 +18,7 @@ public:
     void initializeTimerForDelays(volatile bool& gIsExpired);
     void startTimer(uint16_t calculatedDelay);
     bool isExpired();
-    Timer1(TimerMode mode);
+    Timer1();
 
 private:
     volatile bool* isExpired_;

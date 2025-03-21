@@ -189,7 +189,7 @@ void Timer0::allowInterrupts(OutputComparePin pin)
         break;
 
     case OutputComparePin::NONE:
-        TIMSK0 &= ~(1 << OCIE0A | 1 << OCIE0B);
+        TIMSK0 &= ~((1 << OCIE0A) | (1 << OCIE0B));
         break;
     }
 

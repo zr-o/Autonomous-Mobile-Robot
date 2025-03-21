@@ -16,14 +16,22 @@ enum class Direction
 class Wheels
 {
 public:
-    Wheels(Timer1 *delayTimer, Timer2 *pwmTimer, Ports *portsUtility);
+    Wheels(Timer1 *delayTimer, Timer2 *pwmTimer);
     void rotateLeftWheel(uint8_t percentage, Direction direction);
     void rotateRightWheel(uint8_t percentage, Direction direction);
+    void goForward(uint8_t percentage, uint16_t calculatedDelay);
+    void goForward(uint8_t percentage);
+    void goBackwards(uint8_t percentage, uint16_t calculatedDelay);
+    void goBackwards(uint8_t percentage);
+    void goLeft(uint8_t percentage, uint16_t calculatedDelay);
+    void goLeft(uint8_t percentage);
+    void goRight(uint8_t percentage, uint16_t calculatedDelay);
+    void goRight(uint8_t percentage);
+    void stop();
 
 private:
     Timer1 *delayTimer_;
     Timer2 *pwmTimer_;
-    Ports *portsUtility_;
 };
 
 #endif

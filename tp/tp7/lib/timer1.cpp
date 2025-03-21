@@ -1,8 +1,8 @@
 #include "timer1.h"
 
-Timer1::Timer1(TimerMode mode) : isExpired_(nullptr)
+Timer1::Timer1() : isExpired_(nullptr)
 {
-    setTimerMode(mode);
+    setTimerMode(TimerMode::NORMAL);
     setPrescaler(Prescaler::PRESCALER_1);
     setCompareOutputModeA(CompareOutputMode::NORMAL);
     setCompareOutputModeB(CompareOutputMode::NORMAL);

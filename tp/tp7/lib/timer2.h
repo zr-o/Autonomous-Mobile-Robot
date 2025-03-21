@@ -15,7 +15,7 @@ public:
     void setCompareValue(OutputComparePin pin, uint8_t value);
     void setTimerValue(uint8_t value);
     void allowInterrupts(OutputComparePin pin);
-    Timer2(TimerMode mode);
+    Timer2();
 };
 
 #endif

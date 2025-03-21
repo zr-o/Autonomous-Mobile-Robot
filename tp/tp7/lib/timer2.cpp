@@ -1,8 +1,8 @@
 #include "timer2.h"
 
-Timer2::Timer2(TimerMode mode)
+Timer2::Timer2()
 {
-    setTimerMode(mode);
+    setTimerMode(TimerMode::NORMAL);
     setPrescaler(Prescaler::PRESCALER_1);
     setCompareOutputModeA(CompareOutputMode::NORMAL);
     setCompareOutputModeB(CompareOutputMode::NORMAL);
@@ -189,7 +189,7 @@ void Timer2::allowInterrupts(OutputComparePin pin)
         break;
 
     case OutputComparePin::NONE:
-        TIMSK2 &= ~(1 << OCIE2A | 1 << OCIE2B);
+        TIMSK2 &= ~((1 << OCIE2A) | (1 << OCIE2B));
         break;
     }
 
