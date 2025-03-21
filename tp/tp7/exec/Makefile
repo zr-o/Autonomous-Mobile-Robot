@@ -148,17 +148,15 @@ all: lib $(TRG) $(HEXROMTRG)
 lib: 
 	$(LIB_MAKE)
 
-debug : 
-	$(LIB_MAKE)
-debug : CXXFLAGS += -DDEBUG
-debug : CFLAGS += -DDEBUG
-debug : $(TRG) $(HEXROMTRG)
-debug : clean all
+debug: clean
+debug: CXXFLAGS += -DDEBUG
+debug:CFLAGS += -DDEBUG
+debug: all
+
 
 # Implementation de la cible
 $(TRG): $(OBJDEPS)
 	$(LIB_MAKE)
-	$(DEBUG) CXXFLAGS="$(CXXFLAGS)"
 	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-lm $(LIBS)
 
