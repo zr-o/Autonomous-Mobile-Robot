@@ -9,6 +9,8 @@
 #include "debug.h"
 
 #define DELAI_5_MS 5
+#define DELAI_25_MS 25
+
 
 void getNextInstruction(uint16_t& address, uint8_t& instruction, uint8_t& operande) {
 
@@ -31,11 +33,19 @@ uint16_t address = 0x00;
 
 uint8_t instruction = 0x00; // valeur de l'instruction
 uint8_t operande = 0x00; // valeur de l'operande
+
+uint8_t savedAddress = 0x00; // position actuelle dans la memoire
+uint8_t loopCounter = 0x00; // compteur pour la boucle
+
 bool codeActif = false;
+
+Led led(Port::A, Pin::N1, Pin:: N2); //creation de l'objet led
+//Wheels wheels(Timer1 *delayTimer, Timer2 *pwmTimer, Ports *portsUtility); //creation de l'objet roues
 
 while(true) {
 
 getNextInstruction(address, instruction, operande);
+ 
 
 if (instruction == 0x01) {
     codeActif = true;
@@ -45,20 +55,21 @@ if (codeActif) {
 
 switch (instruction) {
     case 0x01:
-        //commande de debut de programme (rien a faire ca deja dans le programme)
+        //commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
         break;
 
     case 0x02:
-       //delai
+    for (uint8_t i = 0; i < operande; i++) {
+       _delay_ms(DELAI_25_MS); }
         break;
 
     case 0x44:
         switch (operande) {
             case 0x01:
-            //led verte
+            led.lightUp(Color::GREEN);
             break;
             case 0x02:
-            //led rouge
+            led.lightUp(Color::RED);
             break;
             default:
                 DEBUG_PRINT("operande LED non valide");
@@ -66,7 +77,7 @@ switch (instruction) {
         break;
     
     case 0x45:
-        //eteindre la led
+        led.lightUp(Color::OFF);
         break;
     
     case 0x48:
@@ -100,9 +111,17 @@ switch (instruction) {
     case 0x65:
         //tourner a gauche
         break;
+
+    case 0xc0:
+        savedAddress = address;
+        loopCounter = operande;
+        break;
     
     case 0xc1:
-        //boucle
+    loopCounter--;
+        if (loopCounter > 0) {
+            address = savedAddress;
+        }
         break;
     
     case 0xff:
@@ -110,7 +129,7 @@ switch (instruction) {
         break;
     
     default:
-        //non valide
+        DEBUG_PRINT("instruction non valide");
         break;
     }
 }
