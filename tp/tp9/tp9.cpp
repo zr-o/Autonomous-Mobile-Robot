@@ -11,7 +11,7 @@
 #define DELAI_5_MS 5
 #define DELAI_25_MS 25
 
-
+volatile bool gExpired = false;
 void getNextInstruction(uint16_t& address, uint8_t& instruction, uint8_t& operande) {
 
 Memoire24CXXX mem;
@@ -40,13 +40,14 @@ uint8_t loopCounter = 0x00; // compteur pour la boucle
 bool codeActif = false;
 
 Led led(Port::A, Pin::N1, Pin:: N2); //creation de l'objet led
+Timer1 Timer(TimerMode::NORMAL);
 //Wheels wheels(Timer1 *delayTimer, Timer2 *pwmTimer, Ports *portsUtility); //creation de l'objet roues
 
 while(true) {
 
 getNextInstruction(address, instruction, operande);
  
-
+// transformer les deux premiers octets 
 if (instruction == 0x01) {
     codeActif = true;
 }
@@ -59,8 +60,12 @@ switch (instruction) {
         break;
 
     case 0x02:
-    for (uint8_t i = 0; i < operande; i++) {
-       _delay_ms(DELAI_25_MS); }
+    
+    for (uint8_t i = 0; i < operande; i++) 
+    {
+       Timer.initializeTimerForDelays(gExpired);
+       Timer.startTimer(196); // valeur calculer 25 ms
+        }
         break;
 
     case 0x44:
@@ -81,6 +86,12 @@ switch (instruction) {
         break;
     
     case 0x48:
+
+        switch(operande) {
+
+            case 
+
+        }
         // jouer une sonorité
         break;
 
