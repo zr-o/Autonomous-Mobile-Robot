@@ -1,5 +1,4 @@
 #include "tone.h"
-#include "ports.h"
 
 Tone::Tone() : isExpired_(false) {
 

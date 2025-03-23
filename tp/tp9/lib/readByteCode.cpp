@@ -1,5 +1,4 @@
 #include "readByteCode.h"
-
 #define DELAY_BYTECODE_MS 5
 
 readByteCode::readByteCode() {
@@ -36,7 +35,7 @@ uint8_t temp = 0x00;
     }
 }
 
-uint16_t readByteCode::getSize() {
+uint16_t readByteCode::getSize() const {
 
     return realSize_;
 }

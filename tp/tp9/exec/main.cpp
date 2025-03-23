@@ -1,18 +1,14 @@
 #define F_CPU 8000000UL
 
-#include <util/delay.h>
 #include "timer1.h"
 #include "button.h"
 #include "led.h"
-#include "ports.h"
-#include "memoire_24.h"
-#include "debug.h"
-#include "wheels.h"
 #include "tone.h"
 #include "readByteCode.h"
 
 #define DELAI_5_MS 5
 #define DELAI_25_MS 25
+#define DELAY_500_MS 500
 
 volatile bool gExpired = false;
 Memoire24CXXX mem;
@@ -28,24 +24,6 @@ void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operan
     mem.lecture(address, &temp);
     operande = temp;
     address++;
-}
-
-uint16_t getSize() {
-
-    // Lecture de la taille du programme
-
-    uint8_t highByte = 0x00;
-    uint8_t lowByte = 0x00;
-    mem.lecture(0x00, &highByte);
-    mem.lecture(0x01, &lowByte);
-
-    uint8_t byteShift = 8;
-    uint16_t programSize = (highByte << byteShift) | lowByte;
-
-    DEBUG_PRINT(programSize);
-
-    return programSize;
-
 }
 
 int main()
@@ -69,10 +47,12 @@ int main()
     Timer2 pwmTimer;
     Tone tone = Tone();
     Wheels wheels = Wheels(&delayTimer, &pwmTimer);
-
+    
     // Lecture de la taille du programme
+    readByteCode readByte = readByteCode();
+    uint16_t programSize = readByte.getSize();
+    DEBUG_PRINT(programSize);
 
-    uint16_t programSize = getSize();
 
     while (programSize)
     {
@@ -81,6 +61,7 @@ int main()
 
         if (instruction == 0x01)
         {
+            
             codeActif = true;
         }
 
@@ -98,6 +79,14 @@ int main()
             switch (instruction)
             {
             case 0x01:
+                // Pour s'assurer que le robot fonctionne et qu'on est au debut :
+                led.lightUp(Color::GREEN);
+                _delay_ms(DELAY_500_MS);
+                led.lightUp(Color::RED);
+                _delay_ms(DELAY_500_MS);
+                led.lightUp(Color::GREEN);
+                _delay_ms(DELAY_500_MS);
+                led.lightUp(Color::OFF);
                 // commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
                 break;
 

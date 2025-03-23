@@ -23,7 +23,8 @@ MCU=atmega324pa
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=makefileExec
+PROJECTNAME=makefileLib
+
 
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
@@ -32,13 +33,13 @@ PROJECTNAME=makefileExec
 PRJSRC = $(wildcard *.cpp)
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
-INC= -I../tp7/lib
+INC= -I../../tp7/lib
 #-I/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib
 #-I/../lib
 
 
 # Libraires a lier (ex: -lmylib)
-LIBS = -L../tp7/lib -lstatic
+LIBS = -L../../tp7/lib -lstatic
 #-L/../lib/lib -lstatique
 #-L/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib -lstatique
 # Niveau d'optimization
@@ -75,10 +76,9 @@ REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
 #pour make la librarie
-LIB_MAKE=make -C ../tp7/lib
+LIB_MAKE=make -C ../../tp7/lib
 #pour make debug
-DEBUG= make -C ../tp7/lib debug.o
-
+DEBUG= make -C ../../tp7/lib debug.o
 
 
 ####### Options de compilation #######
@@ -143,7 +143,7 @@ OBJDEPS=$(CFILES:.c=.o) \
 
 # Make all permet simplement de compiler le projet
 #
-all: lib $(TRG) $(HEXROMTRG)
+all: lib $(TRG) $(HEXROMTRG) $(LIBTRG)
 
 lib: 
 	$(LIB_MAKE)
