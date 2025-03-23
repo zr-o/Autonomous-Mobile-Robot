@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "wheels.h"
 #include "tone.h"
+#include "readByteCode.h"
 
 #define DELAI_5_MS 5
 #define DELAI_25_MS 25
@@ -27,6 +28,24 @@ void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operan
     mem.lecture(address, &temp);
     operande = temp;
     address++;
+}
+
+uint16_t getSize() {
+
+    // Lecture de la taille du programme
+
+    uint8_t highByte = 0x00;
+    uint8_t lowByte = 0x00;
+    mem.lecture(0x00, &highByte);
+    mem.lecture(0x01, &lowByte);
+
+    uint8_t byteShift = 8;
+    uint16_t programSize = (highByte << byteShift) | lowByte;
+
+    DEBUG_PRINT(programSize);
+
+    return programSize;
+
 }
 
 int main()
@@ -53,15 +72,7 @@ int main()
 
     // Lecture de la taille du programme
 
-    uint8_t highByte = 0x00;
-    uint8_t lowByte = 0x00;
-    mem.lecture(0x00, &highByte);
-    mem.lecture(0x01, &lowByte);
-
-    uint8_t byteShift = 8;
-    uint16_t programSize = (highByte << byteShift) | lowByte;
-
-    DEBUG_PRINT(programSize);
+    uint16_t programSize = getSize();
 
     while (programSize)
     {
@@ -74,9 +85,12 @@ int main()
         }
 
         programSize--;
-        if (programSize == 0)
+        if (programSize == 0) {
             codeActif = false;
-
+            wheels.stop();
+            led.lightUp(Color::OFF);
+            tone.turnOffMusic();;
+        }
         if (codeActif)
         {
             uint8_t speed = (operande * 100 / 255);
@@ -157,6 +171,8 @@ int main()
                 uint8_t speedPercentageFixRight = 50; // a calculer experimentalement
                 uint16_t fixDelayRight = 1000;        // a calculer experimentalement
                 wheels.goRight(speedPercentageFixRight, fixDelayRight);
+                // delay
+                wheels.stop();
                 // tourner a droite
                 break;
             }
@@ -167,6 +183,8 @@ int main()
                 uint8_t speedPercentageFixLeft = 50; // a calculer experimentalement
                 uint16_t fixDelayLeft = 1000;        // a calculer experimentalement
                 wheels.goLeft(speedPercentageFixLeft, fixDelayLeft);
+                // delay
+                wheels.stop();
                 // tourner a gauche
                 break;
             }
