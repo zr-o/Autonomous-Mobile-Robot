@@ -63,7 +63,7 @@ int main()
 
     DEBUG_PRINT(programSize);
 
-    for (uint8_t i = 0; i < programSize; i++)
+    while (programSize)
     {
 
         getNextInstruction(address, instruction, operande);
@@ -72,6 +72,10 @@ int main()
         {
             codeActif = true;
         }
+
+        programSize--;
+        if (programSize == 0)
+            codeActif = false;
 
         if (codeActif)
         {
@@ -181,6 +185,9 @@ int main()
 
             case 0xff:
                 codeActif = false;
+                wheels.stop();
+                led.lightUp(Color::OFF);
+                tone.turnOffMusic();
                 break;
 
             default:
