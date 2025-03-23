@@ -7,6 +7,8 @@
 #include "ports.h"
 #include "memoire_24.h"
 #include "debug.h"
+#include "wheels.h"
+#include "tone.h"
 
 #define DELAI_5_MS 5
 #define DELAI_25_MS 25
@@ -40,8 +42,11 @@ uint8_t loopCounter = 0x00; // compteur pour la boucle
 bool codeActif = false;
 
 Led led(Port::A, Pin::N1, Pin:: N2); //creation de l'objet led
-Timer1 Timer(TimerMode::NORMAL);
-//Wheels wheels(Timer1 *delayTimer, Timer2 *pwmTimer, Ports *portsUtility); //creation de l'objet roues
+Timer1 timer = Timer1();
+Timer1 delayTimer;
+Timer2 pwmTimer;
+Tone tone = Tone();
+Wheels wheels = Wheels(&delayTimer, &pwmTimer); //creation de l'objet roues
 
 while(true) {
 
@@ -54,6 +59,9 @@ if (instruction == 0x01) {
 
 if (codeActif) {
 
+uint16_t percentageCalculated = 255 * 100;
+uint8_t speed = (operande/percentageCalculated);
+
 switch (instruction) {
     case 0x01:
         //commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
@@ -63,8 +71,8 @@ switch (instruction) {
     
     for (uint8_t i = 0; i < operande; i++) 
     {
-       Timer.initializeTimerForDelays(gExpired);
-       Timer.startTimer(196); // valeur calculer 25 ms
+       timer.initializeTimerForDelays(gExpired);
+       timer.startTimer(196); // valeur calculer 25 ms
         }
         break;
 
@@ -87,42 +95,57 @@ switch (instruction) {
     
     case 0x48:
 
-        switch(operande) {
-
-            case 
-
-        }
+        tone.playNote(operande);
         // jouer une sonorité
         break;
 
     case 0x09:
+
+        tone.turnOffMusic();
         //arreter de jouer la sonorité
         break;
 
     case 0x60:
+        
+        wheels.stop();
         //arreter moteurs
         break;
     
     case 0x61:
+        
+        wheels.stop();
         //arreter moteurs
         break;
     
-    case 0x62:
+    case 0x62: 
+
+        wheels.goForward(speed);
         //avancer
         break;
 
-    case 0x63:
+    case 0x63: 
+
+        wheels.goBackwards(speed);
         //reculer
         break;
 
-    case 0x64:
+    case 0x64: {
+        
+        uint8_t speedPercentageFixRight = 50; // a calculer experimentalement
+        uint16_t fixDelayRight = 1000; // a calculer experimentalement  
+        wheels.goRight(speedPercentageFixRight,fixDelayRight);
         //tourner a droite
         break;
+    }
 
-    case 0x65:
+    case 0x65: {
+
+        uint8_t speedPercentageFixLeft = 50; // a calculer experimentalement
+        uint16_t fixDelayLeft = 1000; // a calculer experimentalement
+        wheels.goLeft(speedPercentageFixLeft,fixDelayLeft);
         //tourner a gauche
         break;
-
+    }
     case 0xc0:
         savedAddress = address;
         loopCounter = operande;

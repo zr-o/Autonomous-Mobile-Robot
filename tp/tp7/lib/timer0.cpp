@@ -1,8 +1,8 @@
 #include "timer0.h"
 
-Timer0::Timer0(TimerMode mode)
+Timer0::Timer0() : isExpired_(nullptr)
 {
-    setTimerMode(mode);
+    setTimerMode(TimerMode::NORMAL);
     setPrescaler(Prescaler::PRESCALER_1);
     setCompareOutputModeA(CompareOutputMode::NORMAL);
     setCompareOutputModeB(CompareOutputMode::NORMAL);
@@ -20,28 +20,28 @@ void Timer0::setPrescaler(Prescaler value)
         break;
 
     case Prescaler::PRESCALER_1:
-        TCCR1B &= ~((1 << CS02) | (1 << CS01));
-        TCCR1B |= (1 << CS10);
+        TCCR0B &= ~((1 << CS02) | (1 << CS01));
+        TCCR0B |= (1 << CS10);
         break;
 
     case Prescaler::PRESCALER_8:
-        TCCR1B &= ~((1 << CS00) | (1 << CS02));
-        TCCR1B |= (1 << CS01);
+        TCCR0B &= ~((1 << CS00) | (1 << CS02));
+        TCCR0B |= (1 << CS01);
         break;
 
     case Prescaler::PRESCALER_64:
-        TCCR1B &= ~(1 << CS02);
-        TCCR1B |= (1 << CS00) | (1 << CS01);
+        TCCR0B &= ~(1 << CS02);
+        TCCR0B |= (1 << CS00) | (1 << CS01);
         break;
 
     case Prescaler::PRESCALER_256:
-        TCCR1B &= ~((1 << CS00) | (1 << CS11));
-        TCCR1B |= (1 << CS02);
+        TCCR0B &= ~((1 << CS00) | (1 << CS11));
+        TCCR0B |= (1 << CS02);
         break;
 
     case Prescaler::PRESCALER_1024:
-        TCCR1B &= ~(1 << CS01);
-        TCCR1B |= (1 << CS00) | (1 << CS02);
+        TCCR0B &= ~(1 << CS01);
+        TCCR0B |= (1 << CS00) | (1 << CS02);
         break;
     }
 
@@ -194,4 +194,25 @@ void Timer0::allowInterrupts(OutputComparePin pin)
     }
 
     sei();
+}
+
+void Timer0::initializeTimerForDelays(volatile bool& gIsExpired)
+{
+    isExpired_ = &gIsExpired;
+
+    setPrescaler(Prescaler::PRESCALER_1024);
+    setTimerMode(TimerMode::CTC);
+}
+void Timer0::startTimer(uint16_t calculatedDelay)
+{
+    *isExpired_ = false;
+
+    setTimerValue(0);
+    setCompareValue(OutputComparePin::A, calculatedDelay);
+    allowInterrupts(OutputComparePin::A);
+}
+
+bool Timer0::isExpired()
+{
+    return *isExpired_;
 }

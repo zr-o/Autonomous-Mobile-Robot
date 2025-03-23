@@ -75,9 +75,9 @@ REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
 #pour make la librarie
-LIB_MAKE=make -C ../lib
+LIB_MAKE=make -C ../tp7/lib
 #pour make debug
-DEBUG= make -C ../lib debug.o
+DEBUG= make -C ../tp7/lib debug.o
 
 
 
