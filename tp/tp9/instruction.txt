@@ -1,0 +1,55 @@
+// Programme de démarrage et de test
+% Début du programme
+# Commentaires en ligne
+
+DAL 1; // Pas execute
+DBT ;  // Indiquer le début du code
+
+// Jouer une sonorite
+SGO 81 ;  // Jouer un son a 880 Hz
+SAR ;     // Arreter la sonorite
+SGO 48; // Jouer un son a 130.81 Hz
+SAR; // Arreter la sonorite
+
+// Avancer avec les moteurs
+MAV 128 ;  // Avancer a 50%
+ATT 10;  // Attendre 250 ms
+
+// Reculer
+MRE 64 ;  // Reculer a 25%
+ATT 10;  // Attendre 250 ms
+
+// Tourner a droite
+TRD ;     // Virer a droite 
+ATT 5; // Attendre 125 ms
+
+// Tourner a gauche
+TRG ;     // Virer a gauche
+ATT 5; // Attendre 125 ms
+
+// Arreter les moteurs
+MAR; 
+
+// Boucle
+DBC 3 ;  // Repeter 4 fois
+DAL 1 ;    // Allumer la LED verte
+ATT 5 ;    // Attendre 125 ms
+DET ;      // Éteindre la LED
+ATT 5 ;    // Attendre 125 ms
+MAV 192;   // Avancer a 75%
+DAL 2;  // Allumer la LED rouge
+ATT 20;  // Attendre 500 ms
+MAR;   // Arreter les moteurs
+FBC ;    // Fin de la boucle
+
+SGO 65; // Jouer un son a 349.23 Hz
+MAV 256; // Avancer a 100%
+ATT 20; // Attendre 500 ms
+MRE 256; // Reculer a 100%
+ATT 20; // Attendre 500 ms
+MAR; // Arreter les moteurs
+SAR; // Arreter la sonorite
+
+// Fin du programme
+FIN ;     // Fin du programme, le robot s'arrete
+DAL 1; // Pas execute
