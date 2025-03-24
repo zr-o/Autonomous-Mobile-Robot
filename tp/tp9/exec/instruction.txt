@@ -34,18 +34,19 @@ MAR;
 DBC 3 ;  // Repeter 4 fois
 DAL 1 ;    // Allumer la LED verte
 ATT 5 ;    // Attendre 125 ms
-DET ;      // Éteindre la LED
+DET 0;      // Éteindre la LED
 ATT 5 ;    // Attendre 125 ms
 MAV 192;   // Avancer a 75%
 DAL 2;  // Allumer la LED rouge
 ATT 20;  // Attendre 500 ms
+DET 0;      // Éteindre la LED
 MAR;   // Arreter les moteurs
 FBC ;    // Fin de la boucle
 
 SGO 65; // Jouer un son a 349.23 Hz
-MAV 256; // Avancer a 100%
+MAV 255; // Avancer a 100%
 ATT 20; // Attendre 500 ms
-MRE 256; // Reculer a 100%
+MRE 255; // Reculer a 100%
 ATT 20; // Attendre 500 ms
 MAR; // Arreter les moteurs
 SAR; // Arreter la sonorite
