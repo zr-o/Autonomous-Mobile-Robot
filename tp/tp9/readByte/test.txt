@@ -1,7 +1,5 @@
 DBT ;  // Indiquer le début du code
-DBC 3 ;  // Repeter 4 fois
 DAL 1 ;    // Allumer la LED verte
 ATT 5 ;    // Attendre 125 ms
 DET ;      // Éteindre la LED
-FBC ;    // Fin de la boucle
 FIN ;     // Fin du programme, le robot s'arrete

@@ -48,15 +48,24 @@ int main()
     Tone tone = Tone();
     Wheels wheels = Wheels(&delayTimer, &pwmTimer);
     // Lecture de la taille du programme
-    readByteCode readByte = readByteCode();
-    uint16_t programSize = readByte.getSize();
-    DEBUG_PRINT(programSize);
+    // readByteCode readByte = readByteCode();
+    // readByte.readByte();
+    uint8_t tempSize = 0x00;
+    mem.lecture(0x00, &tempSize);
+    _delay_ms(DELAI_5_MS);
+    uint8_t byteShift = 8;
+    uint16_t programSize = tempSize << byteShift;
+    mem.lecture(0x01, &tempSize);
+    _delay_ms(DELAI_5_MS);
+    programSize |= tempSize;
 
-
-    while (programSize)
+    while (programSize + 2)
     {
 
         getNextInstruction(address, instruction, operand);
+
+            DEBUG_PRINT(instruction);
+            _delay_ms(10);
 
         if (instruction == 0x01)
         {
@@ -64,7 +73,7 @@ int main()
             codeActif = true;
         }
 
-        programSize--;
+        programSize = programSize -1;
         if (programSize == 0) {
             codeActif = false;
             wheels.stop();
