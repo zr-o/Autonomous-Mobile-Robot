@@ -7,6 +7,7 @@
 #include "ports.h"
 #include "debug.h"
 #include "wheels.h"
+#include "tone.h"
 
 #define DELAI_REBOND_MS 10
 #define DELAI_5_SECONDES_CALCUL 39062
@@ -35,17 +36,5 @@ ISR(TIMER1_COMPA_vect)
 
 int main()
 {
-Timer1 delayTimer;
-delayTimer.initializeTimerForDelays(gExpiredTimer);
 
-Timer2 pwmTimer;
-
-
-
-Wheels wheels = Wheels(&delayTimer, &pwmTimer);
-
-wheels.goForward(75, DELAI_5_SECONDES_CALCUL);
-wheels.goLeft(75, DELAI_5_SECONDES_CALCUL);
-wheels.goRight(75, DELAI_5_SECONDES_CALCUL);
-wheels.goBackwards(75, DELAI_5_SECONDES_CALCUL);
 }
