@@ -13,7 +13,7 @@
 volatile bool gExpired = false;
 Memoire24CXXX mem;
 
-void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operande)
+void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operand)
 {
 
     uint8_t temp = 0x00;
@@ -22,7 +22,7 @@ void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operan
     address++;
     _delay_ms(DELAI_5_MS);
     mem.lecture(address, &temp);
-    operande = temp;
+    operand = temp;
     address++;
 }
 
@@ -33,7 +33,7 @@ int main()
     uint16_t address = startingAddress;
 
     uint8_t instruction = 0x00; // valeur de l'instruction
-    uint8_t operande = 0x00;    // valeur de l'operande
+    uint8_t operand = 0x00;    // valeur de l'operande
 
     uint8_t savedAddress = 0x00; // position actuelle dans la memoire
     uint8_t loopCounter = 0x00;  // compteur pour la boucle
@@ -41,13 +41,12 @@ int main()
     bool codeActif = false;
 
     // Construction des class
-    Led led(Port::A, Pin::N1, Pin::N2);
+    Led led(Port::B, Pin::N1, Pin::N2);
     Timer1 timer = Timer1();
     Timer1 delayTimer;
     Timer2 pwmTimer;
     Tone tone = Tone();
     Wheels wheels = Wheels(&delayTimer, &pwmTimer);
-    
     // Lecture de la taille du programme
     readByteCode readByte = readByteCode();
     uint16_t programSize = readByte.getSize();
@@ -57,7 +56,7 @@ int main()
     while (programSize)
     {
 
-        getNextInstruction(address, instruction, operande);
+        getNextInstruction(address, instruction, operand);
 
         if (instruction == 0x01)
         {
@@ -74,7 +73,7 @@ int main()
         }
         if (codeActif)
         {
-            uint8_t speed = (operande * 100 / 255);
+            uint8_t speed = (operand * 100 / 255);
 
             switch (instruction)
             {
@@ -87,12 +86,13 @@ int main()
                 led.lightUp(Color::GREEN);
                 _delay_ms(DELAY_500_MS);
                 led.lightUp(Color::OFF);
+                DEBUG_PRINT("test");
                 // commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
                 break;
 
             case 0x02:
 
-                for (uint8_t i = 0; i < operande; i++)
+                for (uint8_t i = 0; i < operand; i++)
                 {
                     timer.initializeTimerForDelays(gExpired);
                     timer.startTimer(196); // valeur calculer 25 ms ou utiliser un delay_ms
@@ -100,7 +100,7 @@ int main()
                 break;
 
             case 0x44:
-                switch (operande)
+                switch (operand)
                 {
                 case 0x01:
                     led.lightUp(Color::GREEN);
@@ -109,7 +109,7 @@ int main()
                     led.lightUp(Color::RED);
                     break;
                 default:
-                    DEBUG_PRINT("operande LED non valide");
+                    DEBUG_PRINT("operand LED non valide");
                     break;
                 }
                 break;
@@ -120,7 +120,7 @@ int main()
 
             case 0x48:
 
-                tone.playNote(operande);
+                tone.playNote(operand);
                 // jouer une sonorité
                 break;
 
@@ -157,10 +157,11 @@ int main()
             case 0x64:
             {
 
-                uint8_t speedPercentageFixRight = 50; // a calculer experimentalement
-                uint16_t fixDelayRight = 1000;        // a calculer experimentalement
+                uint8_t speedPercentageFixRight = 50; // calculer experimentalement
+                uint16_t fixDelayRight = 20650; // calculer experimentalement
+
                 wheels.goRight(speedPercentageFixRight, fixDelayRight);
-                // delay
+                _delay_ms(50);
                 wheels.stop();
                 // tourner a droite
                 break;
@@ -169,17 +170,17 @@ int main()
             case 0x65:
             {
 
-                uint8_t speedPercentageFixLeft = 50; // a calculer experimentalement
-                uint16_t fixDelayLeft = 1000;        // a calculer experimentalement
+                uint8_t speedPercentageFixLeft = 50; // calculer experimentalement
+                uint16_t fixDelayLeft = 17000;        //calculer experimentalement
                 wheels.goLeft(speedPercentageFixLeft, fixDelayLeft);
-                // delay
+                _delay_ms(50);
                 wheels.stop();
                 // tourner a gauche
                 break;
             }
             case 0xc0:
                 savedAddress = address;
-                loopCounter = operande;
+                loopCounter = operand;
                 break;
 
             case 0xc1:

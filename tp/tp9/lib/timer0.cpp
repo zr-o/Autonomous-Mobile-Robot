@@ -1,6 +1,6 @@
 #include "timer0.h"
 
-Timer0::Timer0() : isExpired_(nullptr)
+Timer0::Timer0()
 {
     setTimerMode(TimerMode::NORMAL);
     setPrescaler(Prescaler::PRESCALER_1);
@@ -194,25 +194,4 @@ void Timer0::allowInterrupts(OutputComparePin pin)
     }
 
     sei();
-}
-
-void Timer0::initializeTimerForDelays(volatile bool& gIsExpired)
-{
-    isExpired_ = &gIsExpired;
-
-    setPrescaler(Prescaler::PRESCALER_1024);
-    setTimerMode(TimerMode::CTC);
-}
-void Timer0::startTimer(uint16_t calculatedDelay)
-{
-    *isExpired_ = false;
-
-    setTimerValue(0);
-    setCompareValue(OutputComparePin::A, calculatedDelay);
-    allowInterrupts(OutputComparePin::A);
-}
-
-bool Timer0::isExpired()
-{
-    return *isExpired_;
 }

@@ -34,12 +34,12 @@ MAR;
 DBC 3 ;  // Repeter 4 fois
 DAL 1 ;    // Allumer la LED verte
 ATT 5 ;    // Attendre 125 ms
-DET 0;      // Éteindre la LED
+DET ;      // Éteindre la LED
 ATT 5 ;    // Attendre 125 ms
 MAV 192;   // Avancer a 75%
 DAL 2;  // Allumer la LED rouge
 ATT 20;  // Attendre 500 ms
-DET 0;      // Éteindre la LED
+DET ;      // Éteindre la LED
 MAR;   // Arreter les moteurs
 FBC ;    // Fin de la boucle
 

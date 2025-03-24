@@ -1,8 +1,7 @@
 #include "tone.h"
 
-Tone::Tone() : isExpired_(false) {
+Tone::Tone() {
 
-    timer_.initializeTimerForDelays(isExpired_);
     timer_.setCompareOutputModeA(CompareOutputMode::TOGGLE);
     timer_.setTimerMode(TimerMode::PWM);
 }
@@ -147,7 +146,6 @@ void Tone::playNote(uint8_t note) {
     uint16_t cyclePeriode= static_cast<uint16_t>(F_CPU * activeTime) / (prescaler * msToSeconde);
 
     timer_.setCompareValue(OutputComparePin::A, cyclePeriode);
-    timer_.startTimer(cyclePeriode);
 
 
 }

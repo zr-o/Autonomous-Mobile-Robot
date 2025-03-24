@@ -16,12 +16,7 @@ public:
     void setTimerValue(uint8_t value);
     void allowInterrupts(OutputComparePin pin);
     Timer0();
-    void initializeTimerForDelays(volatile bool& gIsExpired);
-    void startTimer(uint16_t calculatedDelay);
-    bool isExpired();
 
-    private : 
-    volatile bool* isExpired_;
 };
 
 #endif
