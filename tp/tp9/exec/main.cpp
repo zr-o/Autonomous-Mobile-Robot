@@ -4,7 +4,9 @@
 #include "button.h"
 #include "led.h"
 #include "tone.h"
-#include "readByteCode.h"
+#include "timer0.h"
+#include "memoire_24.h"
+#include "util/delay.h"
 
 #define DELAI_5_MS 5
 #define DELAI_25_MS 25
@@ -33,7 +35,7 @@ int main()
     uint16_t address = startingAddress;
 
     uint8_t instruction = 0x00; // valeur de l'instruction
-    uint8_t operand = 0x00;    // valeur de l'operande
+    uint8_t operand = 0x00;     // valeur de l'operande
 
     uint8_t savedAddress = 0x00; // position actuelle dans la memoire
     uint8_t loopCounter = 0x00;  // compteur pour la boucle
@@ -42,10 +44,11 @@ int main()
 
     // Construction des class
     Led led(Port::B, Pin::N1, Pin::N2);
-    Timer1 timer = Timer1();
+    Timer1 timer1 = Timer1();
     Timer1 delayTimer;
     Timer2 pwmTimer;
-    Tone tone = Tone();
+    Timer0 timer0;
+    Tone tone = Tone(&timer0);
     Wheels wheels = Wheels(&delayTimer, &pwmTimer);
     // Lecture de la taille du programme
     // readByteCode readByte = readByteCode();
@@ -59,31 +62,34 @@ int main()
     _delay_ms(DELAI_5_MS);
     programSize |= tempSize;
 
-    while (programSize + 2)
+            uint8_t speed = (operand * 100 / 255);
+            uint8_t speedPercentageFixRight = 50; // calculer experimentalement
+            uint16_t fixDelayRight = 20650;       // calculer experimentalement
+            uint8_t speedPercentageFixLeft = 50; // calculer experimentalement
+            uint16_t fixDelayLeft = 17000;       // calculer experimentalement
+
+    for (uint8_t i = 0; i < programSize; i++)
     {
 
         getNextInstruction(address, instruction, operand);
 
-            DEBUG_PRINT(instruction);
-            _delay_ms(10);
+        DEBUG_PRINT(instruction);
 
         if (instruction == 0x01)
         {
-            
+
             codeActif = true;
         }
 
-        programSize = programSize -1;
-        if (programSize == 0) {
+        if (programSize == 0)
+        {
             codeActif = false;
             wheels.stop();
             led.lightUp(Color::OFF);
-            tone.turnOffMusic();;
+            tone.turnOffNote();
         }
         if (codeActif)
         {
-            uint8_t speed = (operand * 100 / 255);
-
             switch (instruction)
             {
             case 0x01:
@@ -103,12 +109,12 @@ int main()
 
                 for (uint8_t i = 0; i < operand; i++)
                 {
-                    timer.initializeTimerForDelays(gExpired);
-                    timer.startTimer(196); // valeur calculer 25 ms ou utiliser un delay_ms
+                    _delay_ms(50); 
                 }
                 break;
 
             case 0x44:
+
                 switch (operand)
                 {
                 case 0x01:
@@ -135,7 +141,7 @@ int main()
 
             case 0x09:
 
-                tone.turnOffMusic();
+                tone.turnOffNote();
                 // arreter de jouer la sonorité
                 break;
 
@@ -160,36 +166,26 @@ int main()
             case 0x63:
 
                 wheels.goBackwards(speed);
+                DEBUG_PRINT("Doesnt work");
                 // reculer
                 break;
 
             case 0x64:
-            {
-
-                uint8_t speedPercentageFixRight = 50; // calculer experimentalement
-                uint16_t fixDelayRight = 20650; // calculer experimentalement
 
                 wheels.goRight(speedPercentageFixRight, fixDelayRight);
-                _delay_ms(50);
                 wheels.stop();
                 // tourner a droite
                 break;
-            }
 
             case 0x65:
-            {
 
-                uint8_t speedPercentageFixLeft = 50; // calculer experimentalement
-                uint16_t fixDelayLeft = 17000;        //calculer experimentalement
                 wheels.goLeft(speedPercentageFixLeft, fixDelayLeft);
-                _delay_ms(50);
                 wheels.stop();
                 // tourner a gauche
                 break;
-            }
             case 0xc0:
                 savedAddress = address;
-                loopCounter = operand;
+                loopCounter = operand + 1;
                 break;
 
             case 0xc1:
@@ -202,9 +198,7 @@ int main()
 
             case 0xff:
                 codeActif = false;
-                wheels.stop();
-                led.lightUp(Color::OFF);
-                tone.turnOffMusic();
+                programSize = 0;
                 break;
 
             default:

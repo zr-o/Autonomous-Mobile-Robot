@@ -1,6 +1,8 @@
-#include "readByteCode.h"
+#define F_CPU 8000000UL
+
 #include <util/delay.h>
 #include "debug.h"
+#include "memoire_24.h"
 #define DELAY_BYTECODE_MS 5
 
 int main() {
@@ -24,7 +26,7 @@ uint8_t temp = 0x00;
     realSize_ |= tempSize1; 
     
     // Lire les instructions et les stocker en memoire
-    for (uint16_t j = 2; j < realSize_ + 2; j++) {
+    for (uint16_t j = 2; j < realSize_; j++) {
         uint8_t buffer = RS232::receiveData();
         mem.ecriture(j, buffer);
         _delay_ms(DELAY_BYTECODE_MS);
