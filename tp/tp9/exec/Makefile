@@ -25,20 +25,20 @@ MCU=atmega324pa
 # (utilisez un seul mot, exemple: 'monprojet')
 PROJECTNAME=makefileExec
 
-
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC = $(wildcard *.cpp) $(wildcard ../lib/*.cpp)
+PRJSRC = $(wildcard *.cpp)
 
 # Inclusions additionnels (ex: -I/path/to/mydir)
-INC= -I../../tp7/lib \
-	-I../lib
+INC= -I../lib
+#-I/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib
+#-I/../lib
 
 
 # Libraires a lier (ex: -lmylib)
-LIBS = -L../../tp7/lib -lstatic
+LIBS = -L../lib -lstatic
 #-L/../lib/lib -lstatique
 #-L/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib -lstatique
 # Niveau d'optimization
@@ -75,9 +75,10 @@ REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
 #pour make la librarie
-LIB_MAKE=make -C ../../tp7/lib
+LIB_MAKE=make -C ../lib
 #pour make debug
-DEBUG= make -C ../../tp7/lib debug.o
+DEBUG= make -C ../lib debug.o
+
 
 
 ####### Options de compilation #######
@@ -122,8 +123,10 @@ CFILES=$(filter %.c, $(PRJSRC))
 CPPFILES=$(filter %.cpp, $(PRJSRC))
 
 # Liste de tout les fichiers objet que nous devons creer
-OBJDEPS = $(PRJSRC:.cpp=.o)
-
+OBJDEPS=$(CFILES:.c=.o) \
+	$(CPPFILES:.cpp=.o)
+	
+	
 # Pour plus d'information sur cette section, consulter :
 # http://bit.ly/257R53E	
 # Les fonctions $(filter pattern…,text) &
@@ -158,15 +161,12 @@ $(TRG): $(OBJDEPS)
 	-lm $(LIBS)
 
 # Production des fichiers object
-../lib/%.o: ../lib/%.cpp
-	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
 # De C a objet
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 # De C++ a objet
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< 
-
 
 # Verification des dependances (header dependencies)
 -include *.d
@@ -189,8 +189,7 @@ install: $(HEXROMTRG)
 # lors de la compilation
 clean:
 	$(LIB_MAKE) clean
-	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) ../lib/*.o ../lib/*.d $(HEXTRG) *.d
-
+	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
 
 # Pour plus d'information sur les phony target, consulter:
 # http://bit.ly/1WBQe61

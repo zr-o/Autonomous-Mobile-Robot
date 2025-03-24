@@ -76,11 +76,6 @@ int main()
         {
             uint8_t speed = (operande * 100 / 255);
 
-            if (loopCounter != 0 && instruction == 0xc0) {
-            DEBUG_PRINT("Erreur : Boucle imbriquée non permise");
-            continue;
-            }
-
             switch (instruction)
             {
             case 0x01:

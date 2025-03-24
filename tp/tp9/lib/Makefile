@@ -23,25 +23,19 @@ MCU=atmega324pa
 
 # Nom de votre projet
 # (utilisez un seul mot, exemple: 'monprojet')
-PROJECTNAME=makefileLib
-
-
+PROJECTNAME=libstatic
+LIBTRG=$(PROJECTNAME).a
 # Fichiers sources
 # Utilisez le suffixe .cpp pour les fichiers C++
 # Listez tous les fichiers a compiler, separes par
 # un espace. exemple: 'tp1.c tp2.cpp':
-PRJSRC = $(wildcard *.cpp)
-
+PRJSRC= $(wildcard *.cpp)
 # Inclusions additionnels (ex: -I/path/to/mydir)
-INC= -I../../tp7/lib
-#-I/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib
-#-I/../lib
-
+INC=
 
 # Libraires a lier (ex: -lmylib)
-LIBS = -L../../tp7/lib -lstatic
-#-L/../lib/lib -lstatique
-#-L/usagers2/gialc/Bureau/INF1900/inf1900-1621/tp/tp7/lib -lstatique
+LIBS=
+
 # Niveau d'optimization
 # Utilisez s (size opt), 1, 2, 3 ou 0 (off)
 OPTLEVEL=s
@@ -75,10 +69,9 @@ AVRDUDE=avrdude
 REMOVE=rm -f
 # HEXFORMAT -- format pour les fichiers produient .hex
 HEXFORMAT=ihex
-#pour make la librarie
-LIB_MAKE=make -C ../../tp7/lib
-#pour make debug
-DEBUG= make -C ../../tp7/lib debug.o
+# Pour ajouter une bibliotheque statique
+AR=avr-ar
+
 
 
 ####### Options de compilation #######
@@ -126,12 +119,12 @@ CPPFILES=$(filter %.cpp, $(PRJSRC))
 OBJDEPS=$(CFILES:.c=.o) \
 	$(CPPFILES:.cpp=.o)
 	
-	
 # Pour plus d'information sur cette section, consulter :
 # http://bit.ly/257R53E	
 # Les fonctions $(filter pattern…,text) &
 # $(patsubst pattern,replacement,text) sont pertinentes
 	
+
 
 ####### Creation des commandes du Makefile ####### 
 
@@ -139,25 +132,18 @@ OBJDEPS=$(CFILES:.c=.o) \
 # En plus de la commande make qui permet de compiler
 # votre projet, vous pouvez utilisez les commandes
 # make all, make install et make clean
-.PHONY: all install debug clean
+.PHONY: all install clean
 
 # Make all permet simplement de compiler le projet
-#
-all: lib $(TRG) $(HEXROMTRG) $(LIBTRG)
-
-lib: 
-	$(LIB_MAKE)
-
-debug: clean
-debug: CXXFLAGS += -DDEBUG
-debug:CFLAGS += -DDEBUG
-debug: all
-
+# $(TRG) $(HEXROMTRG)
+all: $(LIBTRG)
 
 # Implementation de la cible
-$(TRG): $(OBJDEPS)
-	$(LIB_MAKE)
-	$(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
+$(LIBTRG): $(OBJDEPS)
+	$(AR) -crs $(LIBTRG) $(OBJDEPS)
+
+# $(TRG): $(OBJDEPS) $(LIBTRG)
+# $(CC) $(LDFLAGS) -o $(TRG) $(OBJDEPS) \
 	-lm $(LIBS)
 
 # Production des fichiers object
@@ -166,7 +152,8 @@ $(TRG): $(OBJDEPS)
 	$(CC) $(CFLAGS) -c $<
 # De C++ a objet
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< 
+	$(CC) $(CFLAGS) $(CXXFLAGS) -c $<
+
 
 # Verification des dependances (header dependencies)
 -include *.d
@@ -175,8 +162,9 @@ $(TRG): $(OBJDEPS)
 # http://bit.ly/2580FU8
 
 # Production des fichiers hex a partir des fichiers elf
-%.hex: %.elf
-	$(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
+
+# %.hex: %.elf
+# $(OBJCOPY) -j .text -j .data -O $(HEXFORMAT) $< $@
 
 # Make install permet de compiler le projet puis
 # d'ecrire le programme en memoire flash dans votre
@@ -188,8 +176,7 @@ install: $(HEXROMTRG)
 # Make clean permet d'effacer tout les fichiers generes
 # lors de la compilation
 clean:
-	$(LIB_MAKE) clean
-	$(REMOVE) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
+	 $(REMOVE) $(LIBTRG) $(TRG) $(TRG).map $(OBJDEPS) $(HEXTRG) *.d
 
 # Pour plus d'information sur les phony target, consulter:
 # http://bit.ly/1WBQe61
