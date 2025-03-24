@@ -16,7 +16,6 @@ public:
     void setTimerValue(uint8_t value);
     void allowInterrupts(OutputComparePin pin);
     Timer0();
-
 };
 
 #endif

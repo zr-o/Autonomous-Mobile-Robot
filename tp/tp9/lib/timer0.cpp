@@ -21,7 +21,7 @@ void Timer0::setPrescaler(Prescaler value)
 
     case Prescaler::PRESCALER_1:
         TCCR0B &= ~((1 << CS02) | (1 << CS01));
-        TCCR0B |= (1 << CS10);
+        TCCR0B |= (1 << CS00);
         break;
 
     case Prescaler::PRESCALER_8:
@@ -61,8 +61,9 @@ void Timer0::setTimerMode(TimerMode mode)
         break;
 
     case TimerMode::CTC:
-        TCCR0A &= ~((1 << WGM01) | (1 << WGM00));
-        TCCR0B |= (1 << WGM02);
+        TCCR0A &= ~(1 << WGM00);
+        TCCR0A |= (1 << WGM01);
+        TCCR0B &= ~(1 << WGM02);
         TCCR0B &= ~((1 << FOC0A) | (1 << FOC0B));
         break;
 
@@ -195,3 +196,4 @@ void Timer0::allowInterrupts(OutputComparePin pin)
 
     sei();
 }
+

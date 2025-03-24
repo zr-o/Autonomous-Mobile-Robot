@@ -61,11 +61,11 @@ void Timer2::setTimerMode(TimerMode mode)
         break;
 
     case TimerMode::CTC:
-         TCCR2A &= ~(1 << WGM20);
-        TCCR2A |= (1 << WGM21);
-        TCCR2B &= ~(1 << WGM22);
+        TCCR2A &= ~((1 << WGM21) | (1 << WGM20));
+        TCCR2B |= (1 << WGM22);
         TCCR2B &= ~((1 << FOC2A) | (1 << FOC2B));
         break;
+
     case TimerMode::PWM:
         TCCR2A |= (1 << WGM20);
         TCCR2A &= ~(1 << WGM21);
