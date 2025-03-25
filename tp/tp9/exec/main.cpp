@@ -1,197 +1,124 @@
 #define F_CPU 8000000UL
 
-#include "timer1.h"
-#include "button.h"
+#include <util/delay.h>
 #include "led.h"
 #include "tone.h"
-#include "timer0.h"
-#include "memoire_24.h"
-#include "util/delay.h"
+#include "wheels.h"
+#include "control_unit.h"
+#include "global_functions.h"
+#include "debug.h"
 
-#define DELAY_5_MS 5
-#define DELAY_25_MS 25
-#define DELAY_MUSIC_MS 200
+#define DELAY_250_MS 250
+#define DELAY_2640_MS_CALCULATED 20650
+#define DELAY_2176_MS_CALCULATED 17000
+#define EXPERIMENTAL_PERCENTAGE_50 50
 
-volatile bool gExpired = false;
-Memoire24CXXX mem;
-
-void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operand)
-{
-
-    uint8_t tempAddress = 0x00;
-    mem.lecture(address, &tempAddress);
-    instruction = tempAddress;
-    address++;
-    _delay_ms(DELAY_5_MS);
-    mem.lecture(address, &tempAddress);
-    operand = tempAddress;
-    address++;
-}
+volatile bool gExpiredTimer = false;
 
 ISR(TIMER1_COMPA_vect)
 {
-    gExpired = true;
+
+    gExpiredTimer = true;
     TIMSK1 &= ~(1 << OCIE1A);
 }
 
 int main()
 {
-
-    uint8_t startingAddress = 0x02;
-    uint16_t address = startingAddress;
-
-    uint8_t instruction = 0x00; // valeur de l'instruction
-    uint8_t operand = 0x00;     // valeur de l'operande
-
-    uint8_t savedAddress = 0x00; // position actuelle dans la memoire
-    uint8_t loopCounter = 0x00;  // compteur pour la boucle
-
-    bool codeActif = false;
-
-    // Construction des class
-    Led led(Port::B, Pin::N1, Pin::N2);
+    Timer0 toneTimer;
     Timer1 delayTimer;
     Timer2 pwmTimer;
-    Timer0 timer0;
-    Tone tone = Tone(&timer0);
+    delayTimer.initializeTimerForDelays(gExpiredTimer);
+
+    Led led = Led(Port::A, Pin::N1, Pin::N2);
     Wheels wheels = Wheels(&delayTimer, &pwmTimer);
+    Tone tone = Tone(&toneTimer);
 
+    ControlUnit controlUnit = ControlUnit();
+    Instruction currentInstruction = controlUnit.getCurrentInstruction();
+    uint8_t currentOperand = controlUnit.getCurrentOperand();
 
-    delayTimer.initializeTimerForDelays(gExpired);
-    // Lecture de la taille du programme
-    uint8_t tempSize = 0x00;
-    mem.lecture(0x00, &tempSize);
-    _delay_ms(DELAY_5_MS);
-    uint8_t byteShift = 8;
-    uint16_t programSize = tempSize << byteShift;
-    mem.lecture(0x01, &tempSize);
-    _delay_ms(DELAY_5_MS);
-    programSize |= tempSize;
+    led.lightUp(Color::RED);
+    _delay_ms(DELAY_250_MS);
+    led.lightUp(Color::GREEN);
+    _delay_ms(DELAY_250_MS);
+    led.lightUp(Color::RED);
+    _delay_ms(DELAY_250_MS);
+    led.lightUp(Color::GREEN);
+    _delay_ms(DELAY_250_MS);
 
-    while (!codeActif)
+    DEBUG_PRINT(uint8_t(currentInstruction));
+    DEBUG_PRINT(currentOperand);
+
+    while (currentInstruction != Instruction::FIN)
     {
-        getNextInstruction(address, instruction, operand);
+        controlUnit.fetch();
+        controlUnit.decode();
 
-        if (instruction == 0x01)
+        currentInstruction = controlUnit.getCurrentInstruction();
+        currentOperand = controlUnit.getCurrentOperand();
+
+        DEBUG_PRINT(uint8_t(currentInstruction));
+        DEBUG_PRINT(currentOperand);
+
+        switch (currentInstruction)
         {
-
-            codeActif = true;
-        }
-    }
-    while (codeActif)
-    {
-
-        getNextInstruction(address, instruction, operand);
-
-        uint8_t speed = (operand * 100 / 255);
-        uint8_t speedPercentageFixRight = 50; // calculer experimentalement
-        uint16_t fixDelayRight = 20650;       // calculer experimentalement
-        uint8_t speedPercentageFixLeft = 50;  // calculer experimentalement
-        uint16_t fixDelayLeft = 17000;        // calculer experimentalement#
-        
-        switch (instruction)
-        {
-        case 0x01:
-            // commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
+        case Instruction::ATT:
+            variableDelayMs(25 * currentOperand);
             break;
 
-        case 0x02:
-            for (uint8_t i = 0; i < operand; i++)
+        case Instruction::DAL:
+            if (currentOperand == 1)
             {
-                _delay_ms(DELAY_25_MS);
-            }
-            break;
-
-        case 0x44:
-
-            switch (operand)
-            {
-            case 0x01:
                 led.lightUp(Color::GREEN);
-                break;
-            case 0x02:
-                led.lightUp(Color::RED);
-                break;
-            default:
-                DEBUG_PRINT("operand LED non valide");
-                break;
             }
-            break;
-
-        case 0x45:
-            led.lightUp(Color::OFF);
-            break;
-
-        case 0x48:
-
-            tone.playNote(operand);
-            _delay_ms(DELAY_MUSIC_MS);
-            // jouer une sonorité
-            break;
-
-        case 0x09:
-
-            tone.turnOffNote();
-            // arreter de jouer la sonorité
-            break;
-
-        case 0x60:
-
-            wheels.stop();
-            // arreter moteurs
-            break;
-
-        case 0x61:
-
-            wheels.stop();
-            // arreter moteurs
-            break;
-
-        case 0x62:
-
-            wheels.goForward(speed);
-            // avancer
-            break;
-
-        case 0x63:
-
-            wheels.goBackwards(speed);
-            // reculer
-            break;
-
-        case 0x64:
-
-            wheels.goRight(speedPercentageFixRight, fixDelayRight);
-            // tourner a droite
-            break;
-
-        case 0x65:
-
-            wheels.goLeft(speedPercentageFixLeft, fixDelayLeft);
-            // tourner a gauche
-            break;
-        case 0xc0:
-            savedAddress = address;
-            loopCounter = operand + 1;
-            break;
-
-        case 0xc1:
-            loopCounter--;
-            if (loopCounter > 0)
+            if (currentOperand == 2)
             {
-                address = savedAddress;
+                led.lightUp(Color::RED);
             }
             break;
 
-        case 0xff:
-            codeActif = false;
-            wheels.stop();
-            tone.turnOffNote();
+        case Instruction::DET:
             led.lightUp(Color::OFF);
             break;
+
+        case Instruction::MAR1:
+            wheels.stop();
+            break;
+
+        case Instruction::MAR2:
+            wheels.stop();
+            break;
+
+        case Instruction::MAV:
+            wheels.goForward(((currentOperand * 100) / 255));
+            break;
+
+        case Instruction::MRE:
+            wheels.goBackwards(((currentOperand * 100) / 255));
+            break;
+
+        case Instruction::TRD:
+            wheels.goRight(EXPERIMENTAL_PERCENTAGE_50, DELAY_2640_MS_CALCULATED); // valeurs calcule experimentalement
+            break;
+
+        case Instruction::TRG:
+            wheels.goLeft(EXPERIMENTAL_PERCENTAGE_50, DELAY_2176_MS_CALCULATED); // valeurs calcule experimentalement
+            break;
+
+        case Instruction::SGO:
+            tone.playNote(currentOperand);
+            break;
+
+        case Instruction::SAR:
+            tone.turnOffNote();
+            break;
+
+        case Instruction::FIN:
+            tone.turnOffNote();
+            wheels.stop();
+            led.lightUp(Color::OFF);
 
         default:
-            DEBUG_PRINT("instruction non valide");
             break;
         }
     }
