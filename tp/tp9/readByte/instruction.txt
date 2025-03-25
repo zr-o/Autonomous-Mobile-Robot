@@ -1,0 +1,92 @@
+// Programme de démarrage et de test
+% Début du programme
+# Commentaires en ligne
+
+DAL 1; // Pas execute
+DBT ;  // Indiquer le début du code
+
+// Avancer
+MAV 255;  // Avancer a 100%
+ATT 80;  // Attendre 2s
+
+// Reculer
+MRE 128 ;  // Reculer a 50%
+ATT 40;  // Attendre 1s
+
+// Tourner a droite
+TRD ;     // Virer a droite 
+ATT 40; // Attendre 1s
+
+// Avancer
+MAV 64 ;  // Avancer a 25%
+ATT 10;  // Attendre 250 ms
+
+// Tourner a gauche
+TRG ;     // Virer a gauche
+ATT 20; // Attendre 500 ms
+
+// Arreter les moteurs
+MAR; 
+
+// Boucle
+DBC 3 ;  // Repeter 4 fois
+DAL 1 ;    // Allumer la LED verte
+ATT 10 ;    // Attendre 250 ms
+DET ;      // Éteindre la LED
+ATT 10 ;    // Attendre 250 ms
+MAV 192;   // Avancer a 75%
+ATT 80 ;    // Attendre 1s
+DAL 2;  // Allumer la LED rouge
+MRE 192; // Reculer a 75%
+ATT 20;  // Attendre 500 ms
+DET ;      // Éteindre la LED
+MAR;   // Arreter les moteurs
+FBC ;    // Fin de la boucle
+
+// Tourner a gauche
+TRG ;     // Virer a gauche
+
+SGO 76;  // 
+SGO 75;  // 
+SGO 76;  // 
+SGO 75;  // 
+SGO 76;  // 
+SGO 71;  // 
+SGO 74;  // 
+SGO 72;  // 
+SGO 70;  // 
+SGO 255; // Pause (pas de son)
+SGO 60;  // 
+SGO 64;  // 
+SGO 69;  // 
+SGO 71;  // 
+SGO 255; // Pause (pas de son)
+SGO 64;  // 
+SGO 68;  // 
+SGO 71;  //
+SGO 72;  // 
+SGO 255; // 
+SGO 64;  // 
+SGO 76;  //
+SGO 75;  // 
+SGO 76;  // 
+SGO 75;  //
+SGO 76;  //
+SGO 71;  //
+SGO 74;  //
+SGO 72;  //
+SGO 70;  //
+SGO 255; // Pause (pas de son)
+SGO 60;  //
+SGO 64;  // 
+SGO 69;  // 
+SGO 71;  // 
+SGO 255; // Pause (pas de son)
+SGO 60;  //
+SGO 64;  // 
+SGO 67;  // 
+SGO 69;  // 
+
+// Fin du programme
+FIN ;     // Fin du programme, le robot s'arrete
+DAL 1; // Pas execute

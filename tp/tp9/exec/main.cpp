@@ -8,9 +8,9 @@
 #include "memoire_24.h"
 #include "util/delay.h"
 
-#define DELAI_5_MS 5
-#define DELAI_25_MS 25
-#define DELAY_500_MS 500
+#define DELAY_5_MS 5
+#define DELAY_25_MS 25
+#define DELAY_MUSIC_MS 200
 
 volatile bool gExpired = false;
 Memoire24CXXX mem;
@@ -18,14 +18,20 @@ Memoire24CXXX mem;
 void getNextInstruction(uint16_t &address, uint8_t &instruction, uint8_t &operand)
 {
 
-    uint8_t temp = 0x00;
-    mem.lecture(address, &temp);
-    instruction = temp;
+    uint8_t tempAddress = 0x00;
+    mem.lecture(address, &tempAddress);
+    instruction = tempAddress;
     address++;
-    _delay_ms(DELAI_5_MS);
-    mem.lecture(address, &temp);
-    operand = temp;
+    _delay_ms(DELAY_5_MS);
+    mem.lecture(address, &tempAddress);
+    operand = tempAddress;
     address++;
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+    gExpired = true;
+    TIMSK1 &= ~(1 << OCIE1A);
 }
 
 int main()
@@ -44,167 +50,149 @@ int main()
 
     // Construction des class
     Led led(Port::B, Pin::N1, Pin::N2);
-    Timer1 timer1 = Timer1();
     Timer1 delayTimer;
     Timer2 pwmTimer;
     Timer0 timer0;
     Tone tone = Tone(&timer0);
     Wheels wheels = Wheels(&delayTimer, &pwmTimer);
+
+
+    delayTimer.initializeTimerForDelays(gExpired);
     // Lecture de la taille du programme
-    // readByteCode readByte = readByteCode();
-    // readByte.readByte();
     uint8_t tempSize = 0x00;
     mem.lecture(0x00, &tempSize);
-    _delay_ms(DELAI_5_MS);
+    _delay_ms(DELAY_5_MS);
     uint8_t byteShift = 8;
     uint16_t programSize = tempSize << byteShift;
     mem.lecture(0x01, &tempSize);
-    _delay_ms(DELAI_5_MS);
+    _delay_ms(DELAY_5_MS);
     programSize |= tempSize;
 
-            uint8_t speed = (operand * 100 / 255);
-            uint8_t speedPercentageFixRight = 50; // calculer experimentalement
-            uint16_t fixDelayRight = 20650;       // calculer experimentalement
-            uint8_t speedPercentageFixLeft = 50; // calculer experimentalement
-            uint16_t fixDelayLeft = 17000;       // calculer experimentalement
-
-    for (uint8_t i = 0; i < programSize; i++)
+    while (!codeActif)
     {
-
         getNextInstruction(address, instruction, operand);
-
-        DEBUG_PRINT(instruction);
 
         if (instruction == 0x01)
         {
 
             codeActif = true;
         }
+    }
+    while (codeActif)
+    {
 
-        if (programSize == 0)
+        getNextInstruction(address, instruction, operand);
+
+        uint8_t speed = (operand * 100 / 255);
+        uint8_t speedPercentageFixRight = 50; // calculer experimentalement
+        uint16_t fixDelayRight = 20650;       // calculer experimentalement
+        uint8_t speedPercentageFixLeft = 50;  // calculer experimentalement
+        uint16_t fixDelayLeft = 17000;        // calculer experimentalement#
+        
+        switch (instruction)
         {
-            codeActif = false;
-            wheels.stop();
-            led.lightUp(Color::OFF);
-            tone.turnOffNote();
-        }
-        if (codeActif)
-        {
-            switch (instruction)
+        case 0x01:
+            // commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
+            break;
+
+        case 0x02:
+            for (uint8_t i = 0; i < operand; i++)
+            {
+                _delay_ms(DELAY_25_MS);
+            }
+            break;
+
+        case 0x44:
+
+            switch (operand)
             {
             case 0x01:
-                // Pour s'assurer que le robot fonctionne et qu'on est au debut :
                 led.lightUp(Color::GREEN);
-                _delay_ms(DELAY_500_MS);
-                led.lightUp(Color::RED);
-                _delay_ms(DELAY_500_MS);
-                led.lightUp(Color::GREEN);
-                _delay_ms(DELAY_500_MS);
-                led.lightUp(Color::OFF);
-                DEBUG_PRINT("test");
-                // commande de debut de programme (rien a faire, deja dans le programme car codeActif == true)
                 break;
-
             case 0x02:
-
-                for (uint8_t i = 0; i < operand; i++)
-                {
-                    _delay_ms(50); 
-                }
+                led.lightUp(Color::RED);
                 break;
-
-            case 0x44:
-
-                switch (operand)
-                {
-                case 0x01:
-                    led.lightUp(Color::GREEN);
-                    break;
-                case 0x02:
-                    led.lightUp(Color::RED);
-                    break;
-                default:
-                    DEBUG_PRINT("operand LED non valide");
-                    break;
-                }
-                break;
-
-            case 0x45:
-                led.lightUp(Color::OFF);
-                break;
-
-            case 0x48:
-
-                tone.playNote(operand);
-                // jouer une sonorité
-                break;
-
-            case 0x09:
-
-                tone.turnOffNote();
-                // arreter de jouer la sonorité
-                break;
-
-            case 0x60:
-
-                wheels.stop();
-                // arreter moteurs
-                break;
-
-            case 0x61:
-
-                wheels.stop();
-                // arreter moteurs
-                break;
-
-            case 0x62:
-
-                wheels.goForward(speed);
-                // avancer
-                break;
-
-            case 0x63:
-
-                wheels.goBackwards(speed);
-                DEBUG_PRINT("Doesnt work");
-                // reculer
-                break;
-
-            case 0x64:
-
-                wheels.goRight(speedPercentageFixRight, fixDelayRight);
-                wheels.stop();
-                // tourner a droite
-                break;
-
-            case 0x65:
-
-                wheels.goLeft(speedPercentageFixLeft, fixDelayLeft);
-                wheels.stop();
-                // tourner a gauche
-                break;
-            case 0xc0:
-                savedAddress = address;
-                loopCounter = operand + 1;
-                break;
-
-            case 0xc1:
-                loopCounter--;
-                if (loopCounter > 0)
-                {
-                    address = savedAddress;
-                }
-                break;
-
-            case 0xff:
-                codeActif = false;
-                programSize = 0;
-                break;
-
             default:
-                DEBUG_PRINT("instruction non valide");
+                DEBUG_PRINT("operand LED non valide");
                 break;
             }
+            break;
+
+        case 0x45:
+            led.lightUp(Color::OFF);
+            break;
+
+        case 0x48:
+
+            tone.playNote(operand);
+            _delay_ms(DELAY_MUSIC_MS);
+            // jouer une sonorité
+            break;
+
+        case 0x09:
+
+            tone.turnOffNote();
+            // arreter de jouer la sonorité
+            break;
+
+        case 0x60:
+
+            wheels.stop();
+            // arreter moteurs
+            break;
+
+        case 0x61:
+
+            wheels.stop();
+            // arreter moteurs
+            break;
+
+        case 0x62:
+
+            wheels.goForward(speed);
+            // avancer
+            break;
+
+        case 0x63:
+
+            wheels.goBackwards(speed);
+            // reculer
+            break;
+
+        case 0x64:
+
+            wheels.goRight(speedPercentageFixRight, fixDelayRight);
+            // tourner a droite
+            break;
+
+        case 0x65:
+
+            wheels.goLeft(speedPercentageFixLeft, fixDelayLeft);
+            // tourner a gauche
+            break;
+        case 0xc0:
+            savedAddress = address;
+            loopCounter = operand + 1;
+            break;
+
+        case 0xc1:
+            loopCounter--;
+            if (loopCounter > 0)
+            {
+                address = savedAddress;
+            }
+            break;
+
+        case 0xff:
+            codeActif = false;
+            wheels.stop();
+            tone.turnOffNote();
+            led.lightUp(Color::OFF);
+            break;
+
+        default:
+            DEBUG_PRINT("instruction non valide");
+            break;
         }
     }
 }

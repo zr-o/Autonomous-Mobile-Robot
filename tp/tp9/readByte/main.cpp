@@ -8,22 +8,22 @@
 int main() {
 
 Memoire24CXXX mem;
-uint8_t temp = 0x00;
+uint8_t address = 0x00;
 
     // Lire le premier octet
     uint8_t byteShift = 8;
-    uint8_t tempSize1 = RS232::receiveData();
-    mem.ecriture(temp, tempSize1);
+    uint8_t addressSize1 = RS232::receiveData();
+    mem.ecriture(address, addressSize1);
     _delay_ms(DELAY_BYTECODE_MS);
-    uint16_t realSize_ = tempSize1 << byteShift; // Decalage pour préparer la taille
+    uint16_t realSize_ = addressSize1 << byteShift; // Decalage pour préparer la taille
 
     
     // Lire le deuxième octet 
-    temp++;
-    tempSize1 = RS232::receiveData();
-    mem.ecriture(temp, tempSize1);
+    address++;
+    addressSize1 = RS232::receiveData();
+    mem.ecriture(address, addressSize1);
     _delay_ms(DELAY_BYTECODE_MS);
-    realSize_ |= tempSize1; 
+    realSize_ |= addressSize1; 
     
     // Lire les instructions et les stocker en memoire
     for (uint16_t j = 2; j < realSize_; j++) {
