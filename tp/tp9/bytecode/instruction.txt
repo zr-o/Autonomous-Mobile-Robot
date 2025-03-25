@@ -11,7 +11,7 @@ ATT 80;  // Attendre 2s
 
 // Reculer
 MRE 128 ;  // Reculer a 50%
-ATT 40;  // Attendre 1s
+ATT 80;  // Attendre 2s
 
 // Tourner a droite
 TRD ;     // Virer a droite 
@@ -19,11 +19,11 @@ ATT 40; // Attendre 1s
 
 // Avancer
 MAV 64 ;  // Avancer a 25%
-ATT 10;  // Attendre 250 ms
+ATT 80;  // Attendre 1s
 
 // Tourner a gauche
 TRG ;     // Virer a gauche
-ATT 20; // Attendre 500 ms
+ATT 40; // Attendre 1s
 
 // Arreter les moteurs
 MAR; 
@@ -47,45 +47,75 @@ FBC ;    // Fin de la boucle
 TRG ;     // Virer a gauche
 
 SGO 76;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 75;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 76;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 75;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 76;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 71;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 74;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 72;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 70;  // 
-SGO 255; // Pause (pas de son)
+ATT 10 ;    // Attendre 250 ms
 SGO 60;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 64;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 69;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 71;  // 
-SGO 255; // Pause (pas de son)
+ATT 10 ;    // Attendre 250 ms
 SGO 64;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 68;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 71;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 72;  // 
-SGO 255; // 
+ATT 10 ;    // Attendre 250 ms
 SGO 64;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 76;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 75;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 76;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 75;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 76;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 71;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 74;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 72;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 70;  //
-SGO 255; // Pause (pas de son)
+ATT 10 ;    // Attendre 250 ms
 SGO 60;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 64;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 69;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 71;  // 
-SGO 255; // Pause (pas de son)
+ATT 10 ;    // Attendre 250 ms
 SGO 60;  //
+ATT 10 ;    // Attendre 250 ms
 SGO 64;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 67;  // 
+ATT 10 ;    // Attendre 250 ms
 SGO 69;  // 
+ATT 10 ;    // Attendre 250 ms
 
 // Fin du programme
 FIN ;     // Fin du programme, le robot s'arrete

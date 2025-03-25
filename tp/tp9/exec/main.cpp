@@ -1,4 +1,6 @@
+#ifndef F_CPU
 #define F_CPU 8000000UL
+#endif
 
 #include <util/delay.h>
 #include "led.h"
@@ -9,9 +11,17 @@
 #include "debug.h"
 
 #define DELAY_250_MS 250
-#define DELAY_2640_MS_CALCULATED 20650
+
+// Ces 2 valeurs ont ete calculer experimentalement a l'aide de la formule suivante:
+// (8000000 / (1024 * 1000)) * ms
+// Ce sont les meilleurs valeurs experimentales pour que nous puissions faire un tour de 90 degree
+#define DELAY_2640_MS_CALCULATED 20650 
 #define DELAY_2176_MS_CALCULATED 17000
+
 #define EXPERIMENTAL_PERCENTAGE_50 50
+#define MAX_PERCENTAGE 100
+#define MAX_8_BITS_VALUE 255
+#define MS_PER_OPERAND 25
 
 volatile bool gExpiredTimer = false;
 
@@ -24,6 +34,7 @@ ISR(TIMER1_COMPA_vect)
 
 int main()
 {
+    // Initialisation des classes
     Timer0 toneTimer;
     Timer1 delayTimer;
     Timer2 pwmTimer;
@@ -37,6 +48,7 @@ int main()
     Instruction currentInstruction = controlUnit.getCurrentInstruction();
     uint8_t currentOperand = controlUnit.getCurrentOperand();
 
+    // Debut du programme
     led.lightUp(Color::RED);
     _delay_ms(DELAY_250_MS);
     led.lightUp(Color::GREEN);
@@ -45,6 +57,7 @@ int main()
     _delay_ms(DELAY_250_MS);
     led.lightUp(Color::GREEN);
     _delay_ms(DELAY_250_MS);
+    led.lightUp(Color::OFF);
 
     DEBUG_PRINT(uint8_t(currentInstruction));
     DEBUG_PRINT(currentOperand);
@@ -63,7 +76,7 @@ int main()
         switch (currentInstruction)
         {
         case Instruction::ATT:
-            variableDelayMs(25 * currentOperand);
+            variableDelayMs(MS_PER_OPERAND * currentOperand);
             break;
 
         case Instruction::DAL:
@@ -90,19 +103,21 @@ int main()
             break;
 
         case Instruction::MAV:
-            wheels.goForward(((currentOperand * 100) / 255));
+            wheels.goForward(((currentOperand * MAX_PERCENTAGE) / MAX_8_BITS_VALUE));
             break;
 
         case Instruction::MRE:
-            wheels.goBackwards(((currentOperand * 100) / 255));
+            wheels.goBackwards(((currentOperand * MAX_PERCENTAGE) / MAX_8_BITS_VALUE));
             break;
 
         case Instruction::TRD:
-            wheels.goRight(EXPERIMENTAL_PERCENTAGE_50, DELAY_2640_MS_CALCULATED); // valeurs calcule experimentalement
+        // valeurs calcule experimentalement *voir haut de la page
+            wheels.goRight(EXPERIMENTAL_PERCENTAGE_50, DELAY_2640_MS_CALCULATED);
             break;
 
         case Instruction::TRG:
-            wheels.goLeft(EXPERIMENTAL_PERCENTAGE_50, DELAY_2176_MS_CALCULATED); // valeurs calcule experimentalement
+        // valeurs calcule experimentalement *voir haut de la page
+            wheels.goLeft(EXPERIMENTAL_PERCENTAGE_50, DELAY_2176_MS_CALCULATED);
             break;
 
         case Instruction::SGO:
@@ -117,6 +132,7 @@ int main()
             tone.turnOffNote();
             wheels.stop();
             led.lightUp(Color::OFF);
+            break;
 
         default:
             break;

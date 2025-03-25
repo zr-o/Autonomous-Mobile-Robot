@@ -1,5 +1,0 @@
-DBT ;  // Indiquer le début du code
-DAL 1 ;    // Allumer la LED verte
-ATT 5 ;    // Attendre 125 ms
-DET ;      // Éteindre la LED
-FIN ;     // Fin du programme, le robot s'arrete
