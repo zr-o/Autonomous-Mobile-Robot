@@ -1,6 +1,6 @@
 #include "timer1.h"
 
-Timer1::Timer1() : isExpired_(nullptr)
+Timer1::Timer1()
 {
     setTimerMode(TimerMode::NORMAL);
     setPrescaler(Prescaler::PRESCALER_1);
@@ -175,12 +175,10 @@ void Timer1::allowInterrupts(OutputComparePin pin)
     switch (pin)
     {
     case OutputComparePin::A:
-        TIMSK1 &= ~(1 << OCIE1B);
         TIMSK1 |= (1 << OCIE1A);
         break;
 
     case OutputComparePin::B:
-        TIMSK1 &= ~(1 << OCIE1A);
         TIMSK1 |= (1 << OCIE1B);
         break;
 
@@ -196,23 +194,59 @@ void Timer1::allowInterrupts(OutputComparePin pin)
     sei();
 }
 
-void Timer1::initializeTimerForDelays(volatile bool& gIsExpired)
+void Timer1::disallowInterrupts(OutputComparePin pin)
 {
-    isExpired_ = &gIsExpired;
+    cli();
 
+    switch (pin)
+    {
+    case OutputComparePin::A:
+        TIMSK1 &= ~(1 << OCIE1A);
+        break;
+
+    case OutputComparePin::B:
+        TIMSK1 &= ~(1 << OCIE1B);
+        break;
+
+    case OutputComparePin::BOTH:
+        TIMSK1 &= ~((1 << OCIE1A) | (1 << OCIE1B));
+        break;
+
+    default:
+        break;
+    }
+
+    sei();
+}
+
+void Timer1::initializeTimerForDelays()
+{
     setPrescaler(Prescaler::PRESCALER_1024);
     setTimerMode(TimerMode::CTC);
 }
-void Timer1::startTimer(uint16_t calculatedDelay)
+void Timer1::startTimer(OutputComparePin pin, uint16_t calculatedDelay)
 {
-    *isExpired_ = false;
+    switch (pin)
+    {
+    case OutputComparePin::A:
+        setTimerValue(0);
+        setCompareValue(OutputComparePin::A, calculatedDelay);
+        allowInterrupts(OutputComparePin::A);
+        break;
 
-    setTimerValue(0);
-    setCompareValue(OutputComparePin::A, calculatedDelay);
-    allowInterrupts(OutputComparePin::A);
-}
+    case OutputComparePin::B:
+        setTimerValue(0);
+        setCompareValue(OutputComparePin::B, calculatedDelay);
+        allowInterrupts(OutputComparePin::B);
+        break;
 
-bool Timer1::isExpired()
-{
-    return *isExpired_;
+    case OutputComparePin::BOTH:
+        setTimerValue(0);
+        setCompareValue(OutputComparePin::BOTH, calculatedDelay);
+        allowInterrupts(OutputComparePin::BOTH);
+        break;
+
+    default:
+        break;
+    }
 }

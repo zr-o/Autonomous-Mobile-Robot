@@ -1,9 +1,7 @@
 #include "wheels.h"
 
-Wheels::Wheels(Timer1 *delayTimer, Timer2 *pwmTimer)
+Wheels::Wheels(Timer2 *pwmTimer) : pwmTimer_(pwmTimer)
 {
-    pwmTimer_ = pwmTimer;
-    delayTimer_ = delayTimer;
 
     Ports::setPinMode(PortMode::WRITE, Port::D, Pin::N8);
     Ports::setPinMode(PortMode::WRITE, Port::D, Pin::N7);
@@ -21,10 +19,8 @@ Wheels::Wheels(Timer1 *delayTimer, Timer2 *pwmTimer)
 
 void Wheels::rotateLeftWheel(uint8_t percentage, Direction direction)
 {
-    const uint8_t maxValue8Bits = 255;
-    const uint8_t percentageDividor = 100;
 
-    uint16_t result = ((percentage * maxValue8Bits) / percentageDividor);
+    uint16_t result = ((percentage * BITS_8_MAX_VALUE) / PERCENTAGE_DIVIDOR);
     pwmTimer_->setCompareValue(OutputComparePin::A, uint8_t(result));
 
     switch (direction)
@@ -41,10 +37,8 @@ void Wheels::rotateLeftWheel(uint8_t percentage, Direction direction)
 
 void Wheels::rotateRightWheel(uint8_t percentage, Direction direction)
 {
-    const uint8_t maxValue8Bits = 255;
-    const uint8_t percentageDividor = 100;
 
-    uint16_t result = ((percentage * maxValue8Bits) / percentageDividor);
+    uint16_t result = ((percentage * BITS_8_MAX_VALUE) / PERCENTAGE_DIVIDOR);
     pwmTimer_->setCompareValue(OutputComparePin::B, uint8_t(result));
 
     switch (direction)
@@ -65,16 +59,12 @@ void Wheels::stop()
     rotateRightWheel(0, Direction::FORWARD);
 }
 
-void Wheels::goForward(uint8_t percentage, uint16_t calculatedDelay)
+void Wheels::goForward(uint8_t percentage, uint16_t delay)
 {
     rotateLeftWheel(percentage, Direction::FORWARD);
     rotateRightWheel(percentage, Direction::FORWARD);
 
-    delayTimer_->startTimer(calculatedDelay);
-
-    while (!(delayTimer_->isExpired()))
-    {
-    }
+    variableDelayMs(delay);
 
     stop();
 }
@@ -85,16 +75,12 @@ void Wheels::goForward(uint8_t percentage)
     rotateRightWheel(percentage, Direction::FORWARD);
 }
 
-void Wheels::goBackwards(uint8_t percentage, uint16_t calculatedDelay)
+void Wheels::goBackwards(uint8_t percentage, uint16_t delay)
 {
     rotateLeftWheel(percentage, Direction::BACKWARDS);
     rotateRightWheel(percentage, Direction::BACKWARDS);
 
-    delayTimer_->startTimer(calculatedDelay);
-
-    while (!(delayTimer_->isExpired()))
-    {
-    }
+    variableDelayMs(delay);
 
     stop();
 }
@@ -105,16 +91,12 @@ void Wheels::goBackwards(uint8_t percentage)
     rotateRightWheel(percentage, Direction::BACKWARDS);
 }
 
-void Wheels::goLeft(uint8_t percentage, uint16_t calculatedDelay)
+void Wheels::goLeft(uint8_t percentage, uint16_t delay)
 {
     rotateLeftWheel(0, Direction::FORWARD);
     rotateRightWheel(percentage, Direction::FORWARD);
 
-    delayTimer_->startTimer(calculatedDelay);
-
-    while (!(delayTimer_->isExpired()))
-    {
-    }
+    variableDelayMs(delay);
 
     stop();
 }
@@ -125,16 +107,12 @@ void Wheels::goLeft(uint8_t percentage)
     rotateRightWheel(percentage, Direction::FORWARD);
 }
 
-void Wheels::goRight(uint8_t percentage, uint16_t calculatedDelay)
+void Wheels::goRight(uint8_t percentage, uint16_t delay)
 {
     rotateLeftWheel(percentage, Direction::FORWARD);
     rotateRightWheel(0, Direction::FORWARD);
 
-    delayTimer_->startTimer(calculatedDelay);
-
-    while (!(delayTimer_->isExpired()))
-    {
-    }
+    variableDelayMs(delay);
 
     stop();
 }

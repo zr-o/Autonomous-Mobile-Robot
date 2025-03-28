@@ -15,13 +15,10 @@ public:
     void setCompareValue(OutputComparePin pin, uint16_t value);
     void setTimerValue(uint16_t value);
     void allowInterrupts(OutputComparePin pin);
-    void initializeTimerForDelays(volatile bool& gIsExpired);
-    void startTimer(uint16_t calculatedDelay);
-    bool isExpired();
+    void disallowInterrupts(OutputComparePin pin);
+    void initializeTimerForDelays();
+    void startTimer(OutputComparePin pin, uint16_t calculatedDelay);
     Timer1();
-
-private:
-    volatile bool* isExpired_;
 };
 
 #endif
