@@ -1,8 +1,6 @@
 #ifndef WHEELS_H
 #define WHEELS_H
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include "timer1.h"
 #include "timer2.h"
 #include "ports.h"

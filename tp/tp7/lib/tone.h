@@ -1,7 +1,6 @@
 #ifndef TONE_H
 #define TONE_H
 
-#include "debug.h"
 #include "timer0.h"
 #include "wheels.h"
 #include "ports.h"
