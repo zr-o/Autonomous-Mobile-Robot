@@ -40,3 +40,7 @@ Led &Robot::led()
 {
     return led_;
 }
+
+LineSensor& Robot::lineSensor(){
+    return lineSensor_;
+}

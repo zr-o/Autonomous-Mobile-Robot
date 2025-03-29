@@ -16,8 +16,8 @@ class Wheels
 {
 public:
     Wheels(Timer2& pwmTimer);
-    void rotateLeftWheel(uint8_t percentage, Direction direction);
-    void rotateRightWheel(uint8_t percentage, Direction direction);
+    void setSpeedLeft(uint8_t percentage, Direction direction);
+    void setSpeedRight(uint8_t percentage, Direction direction);
     void goForward(uint8_t percentage, uint16_t delay);
     void goForward(uint8_t percentage);
     void goBackwards(uint8_t percentage, uint16_t delay);

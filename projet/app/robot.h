@@ -5,6 +5,7 @@
 #include "wheels.h"
 #include "button.h"
 #include "led.h"
+#include "line_sensor.h"
 
 class Robot
 {
@@ -15,6 +16,7 @@ public:
     Button& externButton();
     Button& motherboardButton();
     Led& led();
+    LineSensor& lineSensor();
 
 
 private:
@@ -27,6 +29,8 @@ private:
     Button externButton_;
     Button motherboardButton_;
     Led led_;
+    LineSensor lineSensor_;
+    
     static Robot robot_;
 };
 
