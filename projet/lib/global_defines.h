@@ -6,6 +6,7 @@
 #define DELAY_MS_10 10
 #define BITS_8_MAX_VALUE 256
 #define PERCENTAGE_DIVIDOR 100
+#define DELAY_REBOUND_MS 10
 
 #endif
 

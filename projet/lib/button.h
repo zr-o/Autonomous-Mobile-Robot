@@ -1,6 +1,9 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include "global_defines.h"
+
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include "ports.h"
 
@@ -13,13 +16,16 @@ enum class ButtonType
 class Button
 {
 public:
-    Button(ButtonType type, volatile bool *gButton);
+    Button(ButtonType type, Port port, Pin pin);
     bool isPressed();
+    bool wasPressed();
+    void resetPressMemory();
 
 private:
-    volatile bool *button_;
-    void activateExternalInterrupt();
     ButtonType type_;
+    Port port_;
+    Pin pin_;
+    bool buttonPressMemory_ = false;
 };
 
 #endif

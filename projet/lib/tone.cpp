@@ -1,11 +1,11 @@
 #include "tone.h"
 #include "debug.h"
 
-Tone::Tone(Timer0* toneTimer) : toneTimer_(toneTimer)
+Tone::Tone(Timer0& toneTimer) : toneTimer_(toneTimer)
 {
-    toneTimer_->setPrescaler(Prescaler::NONE);
-    toneTimer_->setTimerMode(TimerMode::CTC);
-    toneTimer_->setCompareOutputModeA(CompareOutputMode::TOGGLE);
+    toneTimer_.setPrescaler(Prescaler::NONE);
+    toneTimer_.setTimerMode(TimerMode::CTC);
+    toneTimer_.setCompareOutputModeA(CompareOutputMode::TOGGLE);
 
     Ports::setPinMode(PortMode::WRITE, Port::B, Pin::N4);
     Ports::setPinMode(PortMode::WRITE, Port::B, Pin::N3);
@@ -168,12 +168,12 @@ void Tone::playNote(uint8_t note)
     }
 
  
-toneTimer_->setTimerValue(0);
-toneTimer_->setCompareValue(OutputComparePin::A, compareValue);
-toneTimer_->setPrescaler(Prescaler::PRESCALER_256);
+toneTimer_.setTimerValue(0);
+toneTimer_.setCompareValue(OutputComparePin::A, compareValue);
+toneTimer_.setPrescaler(Prescaler::PRESCALER_256);
 }
 
 void Tone::turnOffNote()
 {
-    toneTimer_->setPrescaler(Prescaler::NONE);
+    toneTimer_.setPrescaler(Prescaler::NONE);
 }

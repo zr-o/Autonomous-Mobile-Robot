@@ -85,7 +85,7 @@ DEBUG= make -C ../lib debug.o
 
 # Flags pour le compilateur en C
 CFLAGS=-I. -I/usr/include/simavr -MMD $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
-	-std=c++14 -fpack-struct -fshort-enums \
+	-std=c++14 -fshort-enums \
 	-funsigned-bitfields -funsigned-char \
 	-Wall
 

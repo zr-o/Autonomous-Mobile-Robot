@@ -8,12 +8,12 @@
 class Tone
 {
 public:
-    Tone(Timer0* tomeTimer);
+    Tone(Timer0& tomeTimer);
     void playNote(uint8_t note);
     void turnOffNote();
 
 private:
-Timer0* toneTimer_;
+Timer0& toneTimer_;
 };
 
 #endif

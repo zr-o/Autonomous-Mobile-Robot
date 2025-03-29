@@ -1,6 +1,6 @@
 #include "wheels.h"
 
-Wheels::Wheels(Timer2 *pwmTimer) : pwmTimer_(pwmTimer)
+Wheels::Wheels(Timer2& pwmTimer) : pwmTimer_(pwmTimer)
 {
 
     Ports::setPinMode(PortMode::WRITE, Port::D, Pin::N8);
@@ -8,20 +8,20 @@ Wheels::Wheels(Timer2 *pwmTimer) : pwmTimer_(pwmTimer)
     Ports::setPinMode(PortMode::WRITE, Port::D, Pin::N6);
     Ports::setPinMode(PortMode::WRITE, Port::D, Pin::N5);
 
-    pwmTimer_->setTimerMode(TimerMode::PWM);
-    pwmTimer_->setCompareOutputModeA(CompareOutputMode::CLEAR);
-    pwmTimer_->setCompareOutputModeB(CompareOutputMode::CLEAR);
-    pwmTimer_->setTimerValue(0);
-    pwmTimer_->setCompareValue(OutputComparePin::A, 0);
-    pwmTimer_->setCompareValue(OutputComparePin::B, 0);
-    pwmTimer_->setPrescaler(Prescaler::PRESCALER_8);
+    pwmTimer_.setTimerMode(TimerMode::PWM);
+    pwmTimer_.setCompareOutputModeA(CompareOutputMode::CLEAR);
+    pwmTimer_.setCompareOutputModeB(CompareOutputMode::CLEAR);
+    pwmTimer_.setTimerValue(0);
+    pwmTimer_.setCompareValue(OutputComparePin::A, 0);
+    pwmTimer_.setCompareValue(OutputComparePin::B, 0);
+    pwmTimer_.setPrescaler(Prescaler::PRESCALER_8);
 }
 
 void Wheels::rotateLeftWheel(uint8_t percentage, Direction direction)
 {
 
     uint16_t result = ((percentage * BITS_8_MAX_VALUE) / PERCENTAGE_DIVIDOR);
-    pwmTimer_->setCompareValue(OutputComparePin::A, uint8_t(result));
+    pwmTimer_.setCompareValue(OutputComparePin::A, uint8_t(result));
 
     switch (direction)
     {
@@ -39,7 +39,7 @@ void Wheels::rotateRightWheel(uint8_t percentage, Direction direction)
 {
 
     uint16_t result = ((percentage * BITS_8_MAX_VALUE) / PERCENTAGE_DIVIDOR);
-    pwmTimer_->setCompareValue(OutputComparePin::B, uint8_t(result));
+    pwmTimer_.setCompareValue(OutputComparePin::B, uint8_t(result));
 
     switch (direction)
     {
