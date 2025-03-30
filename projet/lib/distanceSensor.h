@@ -1,0 +1,23 @@
+#ifndef DISTANCE_SENSOR_H
+#define DISTANCE_SENSOR_H
+
+#include <avr/io.h> 
+#include "can.h"
+#include "timer1.h"
+
+class DistanceSensor {
+
+    public:
+    DistanceSensor(Timer1& sensorTimer);
+    uint8_t updateDistance();
+    uint8_t readDistance();
+
+
+    private:
+    Timer1& sensorTimer_;
+    can converter_;
+    uint8_t distance_;
+    
+};
+
+#endif /* DISTANCE_SENSOR_H */
