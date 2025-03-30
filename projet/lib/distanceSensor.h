@@ -9,7 +9,7 @@ class DistanceSensor {
 
     public:
     DistanceSensor(Timer1& sensorTimer);
-    uint8_t updateDistance();
+    uint8_t updateDistance(uint8_t newDistance);
     uint8_t readDistance();
 
 

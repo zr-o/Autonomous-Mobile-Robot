@@ -2,19 +2,20 @@
 #include "timer1.h"
 
 #define MAX_SIZE 5
+#define COMPARE_VALUE 12500
 
 DistanceSensor* sensorAdress = nullptr;  // variable globale pour ISR
 
 ISR(TIMER1_COMPA_vect) {
     if (sensorAdress) {
-        sensorAdress->updateDistance();
+        sensorAdress->readDistance();
     }
 }
 
 DistanceSensor::DistanceSensor(Timer1& sensorTimer) : sensorTimer_(sensorTimer) {
     sensorTimer_.setPrescaler(Prescaler::PRESCALER_64);
     sensorTimer_.setTimerMode(TimerMode::CTC);
-    sensorTimer_.setCompareValue(OutputComparePin::A, 12500);
+    sensorTimer_.setCompareValue(OutputComparePin::A, COMPARE_VALUE);
     sensorTimer_.allowInterrupts(OutputComparePin::A);
 
     sensorAdress = this;
@@ -23,20 +24,20 @@ DistanceSensor::DistanceSensor(Timer1& sensorTimer) : sensorTimer_(sensorTimer) 
 uint8_t DistanceSensor::readDistance() {
     uint16_t tempDistance = converter_.lecture(3);
     uint8_t distance = tempDistance >> 2;
-    return distance;
+    return DistanceSensor::updateDistance(distance);
 }
 
-uint8_t DistanceSensor::updateDistance() {
+uint8_t DistanceSensor::updateDistance(uint8_t newDistance) {
 
     static uint8_t distanceList[MAX_SIZE];
     static uint8_t indexPtr = 0;
 
-    if (indexPtr >= 5) {
+    distanceList[indexPtr] = newDistance;
+
+    if (indexPtr >= MAX_SIZE - 1) {
         indexPtr = 0;
     }
     else {indexPtr++;}
-
-    distanceList[indexPtr] = DistanceSensor::readDistance();
 
     uint16_t sum = 0;
     for (uint8_t value : distanceList) {
