@@ -1,14 +1,17 @@
 #include "line_sensor.h"
 
-LineSensor::LineSensor()
+#define BYTE_SHIFT_2 2
+
+LineSensor::LineSensor(can &converter) : converter_(converter)
 {
-
-
     Ports::setPinMode(PortMode::READ, Port::A, Pin::N1);
     Ports::setPinMode(PortMode::READ, Port::A, Pin::N2);
     Ports::setPinMode(PortMode::READ, Port::A, Pin::N3);
     Ports::setPinMode(PortMode::READ, Port::A, Pin::N4);
     Ports::setPinMode(PortMode::READ, Port::A, Pin::N5);
+
+    // Utilisation du mode analogique du sensor
+    Ports::setPinMode(PortMode::READ, Port::A, Pin::N6);
 }
 
 bool LineSensor::leftDetected()
@@ -66,4 +69,12 @@ uint8_t LineSensor::sensorsCount()
     }
 
     return count;
+}
+
+uint8_t LineSensor::readPosition()
+{
+    uint16_t sensorPosition = converter_.lecture(PA5);
+    sensorPosition >>= BYTE_SHIFT_2;
+
+    return uint8_t(sensorPosition);
 }

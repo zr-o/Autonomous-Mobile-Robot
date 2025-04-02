@@ -8,6 +8,7 @@ Robot::Robot()
       externButton_(ButtonType::EXTERN, Port::D, Pin::N4),
       motherboardButton_(ButtonType::MOTHERBOARD, Port::D, Pin::N3),
       led_(Port::B, Pin::N1, Pin::N2),
+      lineSensor_(converter_),
       distanceSensor_(sensorTimer_, converter_)
 {
 }

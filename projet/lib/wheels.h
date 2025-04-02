@@ -1,7 +1,7 @@
 #ifndef WHEELS_H
 #define WHEELS_H
 
-#include <global_functions.h>
+#include <general_functions.h>
 
 #include "timer2.h"
 #include "ports.h"

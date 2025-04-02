@@ -1,5 +1,9 @@
 #include "distance_sensor.h"
 
+#define COMPARE_VALUE_100_MS_DELAY 12500
+#define BYTE_SHIFT_2 2
+#define MAX_ARRAY_SIZE_SENSOR_DATA 5
+
 DistanceSensor *sensorAdress = nullptr; // variable globale pour ISR
 
 ISR(TIMER1_COMPA_vect)
@@ -27,7 +31,7 @@ DistanceSensor::DistanceSensor(Timer1 &sensorTimer, can &converter) : sensorTime
 uint8_t DistanceSensor::readDistance()
 {
     uint16_t tempDistance = converter_.lecture(PA7);
-    uint8_t distance = tempDistance >> 2;
+    uint8_t distance = tempDistance >> BYTE_SHIFT_2;
     return DistanceSensor::updateDistance(distance);
 }
 

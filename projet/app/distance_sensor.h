@@ -4,7 +4,6 @@
 #include <avr/io.h>
 #include "can.h"
 #include "timer1.h"
-#include "global_defines.h"
 #include "ports.h"
 
 class DistanceSensor
@@ -20,4 +19,4 @@ private:
     uint8_t distance_;
 };
 
-#endif /* DISTANCE_SENSOR_H */
+#endif 

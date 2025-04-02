@@ -1,7 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "global_defines.h"
+#include "lib_defines.h"
 
 #include <util/delay.h>
 #include <avr/interrupt.h>
