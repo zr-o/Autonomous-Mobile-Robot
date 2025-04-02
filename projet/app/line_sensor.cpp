@@ -4,39 +4,40 @@
 
 LineSensor::LineSensor(can &converter) : converter_(converter)
 {
-    Ports::setPinMode(PortMode::READ, Port::A, Pin::N1);
-    Ports::setPinMode(PortMode::READ, Port::A, Pin::N2);
-    Ports::setPinMode(PortMode::READ, Port::A, Pin::N3);
-    Ports::setPinMode(PortMode::READ, Port::A, Pin::N4);
-    Ports::setPinMode(PortMode::READ, Port::A, Pin::N5);
+    // Faire attention aux pins utilise par la memoire et dbg c0, c1, d0, d1
+    Ports::setPinMode(PortMode::READ, Port::C, Pin::N3);
+    Ports::setPinMode(PortMode::READ, Port::C, Pin::N4);
+    Ports::setPinMode(PortMode::READ, Port::C, Pin::N5);
+    Ports::setPinMode(PortMode::READ, Port::C, Pin::N6);
+    Ports::setPinMode(PortMode::READ, Port::C, Pin::N7);
 
     // Utilisation du mode analogique du sensor
-    Ports::setPinMode(PortMode::READ, Port::A, Pin::N6);
+    Ports::setPinMode(PortMode::READ, Port::A, Pin::N4);
 }
 
 bool LineSensor::leftDetected()
 {
-    return Ports::readPin(Port::A, Pin::N1);
+    return Ports::readPin(Port::C, Pin::N3);
 }
 
 bool LineSensor::rightDetected()
 {
-    return Ports::readPin(Port::A, Pin::N5);
+    return Ports::readPin(Port::C, Pin::N7);
 }
 
 bool LineSensor::leftMiddleDetected()
 {
-    return Ports::readPin(Port::A, Pin::N2);
+    return Ports::readPin(Port::C, Pin::N4);
 }
 
 bool LineSensor::rightMiddleDetected()
 {
-    return Ports::readPin(Port::A, Pin::N4);
+    return Ports::readPin(Port::C, Pin::N6);
 }
 
 bool LineSensor::middleDetected()
 {
-    return Ports::readPin(Port::A, Pin::N3);
+    return Ports::readPin(Port::C, Pin::N5);
 }
 
 uint8_t LineSensor::sensorsCount()
@@ -73,7 +74,7 @@ uint8_t LineSensor::sensorsCount()
 
 uint8_t LineSensor::readPosition()
 {
-    uint16_t sensorPosition = converter_.lecture(PA5);
+    uint16_t sensorPosition = converter_.lecture(PA3);
     sensorPosition >>= BYTE_SHIFT_2;
 
     return uint8_t(sensorPosition);
