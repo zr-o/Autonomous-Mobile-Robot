@@ -7,7 +7,8 @@ Robot::Robot()
       tone_(tonePwmTimer_),
       externButton_(ButtonType::EXTERN, Port::D, Pin::N4),
       motherboardButton_(ButtonType::MOTHERBOARD, Port::D, Pin::N3),
-      led_(Port::B, Pin::N1, Pin::N2)
+      led_(Port::B, Pin::N1, Pin::N2),
+      distanceSensor_(sensorTimer_, converter_)
 {
 }
 
@@ -41,6 +42,12 @@ Led &Robot::led()
     return led_;
 }
 
-LineSensor& Robot::lineSensor(){
+LineSensor &Robot::lineSensor()
+{
     return lineSensor_;
+}
+
+DistanceSensor &Robot::distanceSensor()
+{
+    return distanceSensor_;
 }

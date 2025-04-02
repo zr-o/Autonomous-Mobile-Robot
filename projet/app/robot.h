@@ -6,6 +6,8 @@
 #include "button.h"
 #include "led.h"
 #include "line_sensor.h"
+#include "can.h"
+#include "distance_sensor.h"
 
 class Robot
 {
@@ -17,19 +19,23 @@ public:
     Button& motherboardButton();
     Led& led();
     LineSensor& lineSensor();
+    DistanceSensor& distanceSensor();
 
 
 private:
    Robot();
 
     Timer0 tonePwmTimer_;
+    Timer1 sensorTimer_;
     Timer2 wheelPwmTimer_;
+    can converter_;
     Wheels wheels_;
     Tone tone_;
     Button externButton_;
     Button motherboardButton_;
     Led led_;
     LineSensor lineSensor_;
+    DistanceSensor distanceSensor_;
     
     static Robot robot_;
 };
