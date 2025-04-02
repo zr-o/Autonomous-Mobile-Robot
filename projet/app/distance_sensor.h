@@ -5,6 +5,7 @@
 #include "can.h"
 #include "timer1.h"
 #include "global_defines.h"
+#include "ports.h"
 
 class DistanceSensor
 {

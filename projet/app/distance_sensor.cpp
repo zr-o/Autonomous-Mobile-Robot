@@ -15,6 +15,8 @@ DistanceSensor::DistanceSensor(Timer1 &sensorTimer, can &converter) : sensorTime
     sensorTimer_.setPrescaler(Prescaler::PRESCALER_64);
     sensorTimer_.setTimerMode(TimerMode::CTC);
 
+    Ports::setPinMode(PortMode::READ, Port::A, Pin::N8);
+
     // ISR appelee a chaque 100 ms pour calculer la moyenne
     sensorTimer_.setCompareValue(OutputComparePin::A, COMPARE_VALUE_100_MS_DELAY);
     sensorTimer_.allowInterrupts(OutputComparePin::A);
@@ -24,7 +26,7 @@ DistanceSensor::DistanceSensor(Timer1 &sensorTimer, can &converter) : sensorTime
 
 uint8_t DistanceSensor::readDistance()
 {
-    uint16_t tempDistance = converter_.lecture(3);
+    uint16_t tempDistance = converter_.lecture(PA7);
     uint8_t distance = tempDistance >> 2;
     return DistanceSensor::updateDistance(distance);
 }
