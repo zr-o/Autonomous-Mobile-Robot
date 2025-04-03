@@ -19,6 +19,7 @@ public:
     static void display(const char *message);
     static void display(const uint16_t x);
     static void display(const uint8_t x);
+    static void display(const int8_t x);
 
 private:
     Debug() = default;

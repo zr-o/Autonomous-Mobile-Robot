@@ -25,3 +25,11 @@ void Debug::display(const uint16_t x)
 
     RS232::sendData((uint8_t*)buffer, strlen(buffer));
 }
+
+void Debug::display(const int8_t x)
+{
+    char buffer[MAX_BUFFER_SIZE];
+    snprintf(buffer, MAX_BUFFER_SIZE, "debugging value: %d\n", x);
+
+    RS232::sendData((uint8_t*)buffer, strlen(buffer));
+}

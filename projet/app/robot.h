@@ -8,6 +8,7 @@
 #include "line_sensor.h"
 #include "can.h"
 #include "distance_sensor.h"
+#include "line_follower.h"
 
 class Robot
 {
@@ -20,6 +21,7 @@ public:
     Led& led();
     LineSensor& lineSensor();
     DistanceSensor& distanceSensor();
+    LineFollower& lineFollower();
 
 
 private:
@@ -36,6 +38,7 @@ private:
     Led led_;
     LineSensor lineSensor_;
     DistanceSensor distanceSensor_;
+    LineFollower lineFollower_;
     
     static Robot robot_;
 };

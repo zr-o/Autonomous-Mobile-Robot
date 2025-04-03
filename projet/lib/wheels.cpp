@@ -19,9 +19,7 @@ Wheels::Wheels(Timer2& pwmTimer) : pwmTimer_(pwmTimer)
 
 void Wheels::setSpeedLeft(uint8_t percentage, Direction direction)
 {
-
-    uint16_t result = ((percentage * BITS_8_MAX_VALUE) / PERCENTAGE_DIVIDOR);
-    pwmTimer_.setCompareValue(OutputComparePin::A, uint8_t(result));
+    pwmTimer_.setCompareValue(OutputComparePin::A, percentage);
 
     switch (direction)
     {
@@ -37,9 +35,7 @@ void Wheels::setSpeedLeft(uint8_t percentage, Direction direction)
 
 void Wheels::setSpeedRight(uint8_t percentage, Direction direction)
 {
-
-    uint16_t result = ((percentage * BITS_8_MAX_VALUE) / PERCENTAGE_DIVIDOR);
-    pwmTimer_.setCompareValue(OutputComparePin::B, uint8_t(result));
+    pwmTimer_.setCompareValue(OutputComparePin::B, percentage);
 
     switch (direction)
     {
