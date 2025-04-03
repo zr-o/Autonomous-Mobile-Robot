@@ -1,57 +1,48 @@
 #include "line_follower.h"
 
-LineFollower::LineFollower(Wheels &wheels, LineSensor &lineSensor) : wheels_(wheels), lineSensor_(lineSensor)
+#define SCALE_FACTOR 10
+#define MAX_CORRECTION 127
+#define INTEGRAL_LIMIT 10000
+
+static inline int16_t clamp(int16_t value, int16_t minVal, int16_t maxVal)
 {
+    return (value < minVal) ? minVal : (value > maxVal ? maxVal : value);
 }
 
-int16_t LineFollower::calculateCorrection(int8_t error)
-{
-    int8_t errorProportional = error;
+LineFollower::LineFollower(Wheels &wheels, LineSensor &lineSensor)
+    : wheels_(wheels), lineSensor_(lineSensor)
+{   
+}
 
+int8_t LineFollower::calculateCorrection(int8_t error)
+{
     errorIntegral_ += error;
 
-    if (errorIntegral_ > 10000 || errorIntegral_ < -10000)
+
+    if (errorIntegral_ > INTEGRAL_LIMIT || errorIntegral_ < -INTEGRAL_LIMIT)
     {
         errorIntegral_ = 0;
     }
 
-    int8_t errorDerivative = error - previousError_;
+    int32_t correction = ((int32_t)kp_ * error +
+                          (int32_t)ki_ * errorIntegral_ +
+                          (int32_t)kd_ * (error - previousError_)) >> SCALE_FACTOR; 
+
     previousError_ = error;
 
-    return ((int32_t)kp_ * errorProportional +
-            (int32_t)ki_ * errorIntegral_ +
-            (int32_t)kd_ * errorDerivative) /
-           100;
+    correction = clamp(correction, -MAX_CORRECTION, MAX_CORRECTION);
+
+    return (int8_t)correction;
 }
 
 void LineFollower::followLine()
 {
-    uint8_t position = lineSensor_.readPosition();
-    int8_t error = position - 127;
-
-    int16_t correction = calculateCorrection(error);
+    int8_t error = lineSensor_.readPosition() - 127;
+    int8_t correction = calculateCorrection(error);
 
     int16_t adjustedRightWheelSpeed = rightWheelBaseSpeed + correction;
     int16_t adjustedLeftWheelSpeed = leftWheelBaseSpeed - correction;
 
-    if (adjustedRightWheelSpeed > 255)
-    {
-
-        adjustedRightWheelSpeed = 255;
-    }
-    if (adjustedRightWheelSpeed < 0)
-    {
-        adjustedRightWheelSpeed = 0;
-    }
-    if (adjustedLeftWheelSpeed > 255)
-    {
-        adjustedLeftWheelSpeed = 255;
-    }
-    if (adjustedLeftWheelSpeed < 0)
-    {
-        adjustedLeftWheelSpeed = 0;
-    }
-
-    wheels_.setSpeedRight(uint8_t(adjustedRightWheelSpeed), Direction::FORWARD);
-    wheels_.setSpeedLeft(uint8_t(adjustedLeftWheelSpeed), Direction::FORWARD);
+    wheels_.setSpeedRight((uint8_t)clamp(adjustedRightWheelSpeed, 0, 255), Direction::FORWARD);
+    wheels_.setSpeedLeft((uint8_t)clamp(adjustedLeftWheelSpeed, 0, 255), Direction::FORWARD);
 }

@@ -20,7 +20,7 @@ public:
     Button& motherboardButton();
     Led& led();
     LineSensor& lineSensor();
-    DistanceSensor& distanceSensor();
+    //DistanceSensor& distanceSensor();
     LineFollower& lineFollower();
 
 
@@ -28,7 +28,7 @@ private:
    Robot();
 
     Timer0 tonePwmTimer_;
-    Timer1 sensorTimer_;
+    //Timer1 sensorTimer_;
     Timer2 wheelPwmTimer_;
     can converter_;
     Wheels wheels_;
@@ -37,7 +37,7 @@ private:
     Button motherboardButton_;
     Led led_;
     LineSensor lineSensor_;
-    DistanceSensor distanceSensor_;
+    //DistanceSensor distanceSensor_;
     LineFollower lineFollower_;
     
     static Robot robot_;

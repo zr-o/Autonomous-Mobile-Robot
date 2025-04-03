@@ -8,24 +8,23 @@ class LineFollower
 {
 public:
     LineFollower(Wheels& wheels, LineSensor& lineSensor);
-    int16_t calculateCorrection(int8_t error);
+    int8_t calculateCorrection(int8_t error);
     void followLine();
 
 private:
     Wheels &wheels_;
     LineSensor& lineSensor_;
+    
+    // Pour pouvoir simuler des floats, nous utilisons une arithmetique a virgule fixe. Example : 1.0 vaut 1.0 * 1024 = 1024
+    int16_t kp_ = 1000;
+    int16_t ki_ = 0;
+    int16_t kd_ = 1000;
 
-    // Valeur calcules experimentalement
-    const uint16_t kp_ = 100;
-    const uint16_t kd_ = 10;
-    const uint16_t ki_ = 0;
+    const uint8_t leftWheelBaseSpeed = 120;
+    const uint8_t rightWheelBaseSpeed = 120;
 
-    // Valeur de base des roues
-    const uint8_t leftWheelBaseSpeed = 110;
-    const uint8_t rightWheelBaseSpeed = 110;
-
-    int16_t errorIntegral_ = 0;
-    uint8_t previousError_ = 0;
+    int16_t errorIntegral_;
+    int8_t previousError_;
 };
 
 #endif

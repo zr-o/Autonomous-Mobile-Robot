@@ -9,7 +9,7 @@ Robot::Robot()
       motherboardButton_(ButtonType::MOTHERBOARD, Port::D, Pin::N3),
       led_(Port::B, Pin::N1, Pin::N2),
       lineSensor_(converter_),
-      distanceSensor_(sensorTimer_, converter_),
+      //distanceSensor_(sensorTimer_, converter_),
       lineFollower_(wheels_, lineSensor_)
 {
 }
@@ -49,10 +49,10 @@ LineSensor &Robot::lineSensor()
     return lineSensor_;
 }
 
-DistanceSensor &Robot::distanceSensor()
+/*DistanceSensor &Robot::distanceSensor()
 {
     return distanceSensor_;
-}
+}*/
 
 LineFollower& Robot::lineFollower(){
     return lineFollower_;

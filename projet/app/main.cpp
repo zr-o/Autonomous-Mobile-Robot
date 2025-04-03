@@ -37,13 +37,7 @@ int main()
     DEBUG_PRINT(savedDirection[1]);*/
 
     while (true){
-        // Fonction qui fait crash apres 30 s
         robot.lineFollower().followLine();
-
-        // Apres 30 seconde, la lumiere cesse d'oscillier et reste verte ou rouge (le programme crash)
-        robot.led().lightUp(Color::GREEN);
-        _delay_ms(100);
-        robot.led().lightUp(Color::RED);
-        _delay_ms(100);
     }
+    robot.wheels().stop();
 }
