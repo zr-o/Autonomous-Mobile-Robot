@@ -40,6 +40,28 @@ bool LineSensor::middleDetected()
     return Ports::readPin(Port::C, Pin::N5);
 }
 
+bool LineSensor::leftTurnDetected()
+{
+    return leftDetected() && leftMiddleDetected() && middleDetected() && rightMiddleDetected() && !rightDetected();
+}
+
+bool LineSensor::rightTurnDetected()
+{
+    return !leftDetected() && leftMiddleDetected() && middleDetected() && rightMiddleDetected() && rightDetected();
+}
+
+bool LineSensor::crossDetected()
+{
+    return leftDetected() && middleDetected() && rightDetected();
+}
+
+bool LineSensor::noLineDetected()
+{
+    return !leftDetected() && !leftMiddleDetected() && !middleDetected() &&
+           !rightMiddleDetected() && !rightDetected();
+}
+
+
 uint8_t LineSensor::sensorsCount()
 {
     uint8_t count = 0;

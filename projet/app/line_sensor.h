@@ -14,6 +14,11 @@ public:
     bool rightMiddleDetected();
     bool leftDetected();
     bool rightDetected();
+    bool leftTurnDetected();
+    bool rightTurnDetected();
+    bool crossDetected();
+    bool noLineDetected();
+
     uint8_t sensorsCount();
     uint8_t readPosition();
 

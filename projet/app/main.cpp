@@ -36,8 +36,13 @@ int main()
     _delay_ms(1000);
     DEBUG_PRINT(savedDirection[1]);*/
 
-    while (true){
-        robot.lineFollower().followLine();
-    }
-    robot.wheels().stop();
+
+StopCondition s = robot.lineFollower().followLine(StopCondition::CROSS, StopCondition::NO_LINE);
+
+if (s == StopCondition::CROSS){
+    robot.led().lightUp(Color::RED);
+} else{
+    robot.led().lightUp(Color::GREEN);
+}
+
 }

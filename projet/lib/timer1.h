@@ -14,8 +14,8 @@ public:
     void setCompareOutputModeB(CompareOutputMode mode);
     void setCompareValue(OutputComparePin pin, uint16_t value);
     void setTimerValue(uint16_t value);
-    void allowInterrupts(OutputComparePin pin);
-    void disallowInterrupts(OutputComparePin pin);
+    static void allowInterrupts(OutputComparePin pin);
+    static void disallowInterrupts(OutputComparePin pin);
     void initializeTimerForDelays();
     void startTimer(OutputComparePin pin, uint16_t calculatedDelay);
     Timer1();
