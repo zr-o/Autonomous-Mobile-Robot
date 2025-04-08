@@ -1,6 +1,6 @@
 #include "wheels.h"
 
-Wheels::Wheels(Timer2& pwmTimer) : pwmTimer_(pwmTimer)
+Wheels::Wheels(Timer2 &pwmTimer) : pwmTimer_(pwmTimer)
 {
 
     Ports::setPinMode(PortMode::WRITE, Port::D, Pin::N8);
@@ -57,6 +57,11 @@ void Wheels::stop()
 
 void Wheels::goForward(uint8_t percentage, uint16_t delay)
 {
+    //Boost
+    setSpeedLeft(255, Direction::FORWARD);
+    setSpeedRight(255, Direction::FORWARD);
+    _delay_ms(50);
+
     setSpeedLeft(percentage, Direction::FORWARD);
     setSpeedRight(percentage, Direction::FORWARD);
 
@@ -73,6 +78,11 @@ void Wheels::goForward(uint8_t percentage)
 
 void Wheels::goBackwards(uint8_t percentage, uint16_t delay)
 {
+    //Boost
+     setSpeedLeft(255, Direction::BACKWARDS);
+    setSpeedRight(255, Direction::BACKWARDS);
+    _delay_ms(50);
+
     setSpeedLeft(percentage, Direction::BACKWARDS);
     setSpeedRight(percentage, Direction::BACKWARDS);
 
@@ -89,6 +99,11 @@ void Wheels::goBackwards(uint8_t percentage)
 
 void Wheels::goLeft(uint8_t percentage, uint16_t delay)
 {
+    //Boost
+    setSpeedLeft(0, Direction::FORWARD);
+    setSpeedRight(255, Direction::FORWARD);
+    _delay_ms(50);
+
     setSpeedLeft(0, Direction::FORWARD);
     setSpeedRight(percentage, Direction::FORWARD);
 
@@ -105,6 +120,10 @@ void Wheels::goLeft(uint8_t percentage)
 
 void Wheels::goRight(uint8_t percentage, uint16_t delay)
 {
+    setSpeedLeft(255, Direction::FORWARD);
+    setSpeedRight(0, Direction::FORWARD);
+    _delay_ms(50);
+
     setSpeedLeft(percentage, Direction::FORWARD);
     setSpeedRight(0, Direction::FORWARD);
 
@@ -117,4 +136,13 @@ void Wheels::goRight(uint8_t percentage)
 {
     setSpeedLeft(percentage, Direction::FORWARD);
     setSpeedRight(0, Direction::FORWARD);
+}
+
+void Wheels::stop(uint16_t delay)
+{
+    stop();
+
+    variableDelayMs(delay);
+
+    stop();
 }

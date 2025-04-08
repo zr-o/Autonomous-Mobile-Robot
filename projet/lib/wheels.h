@@ -27,6 +27,7 @@ public:
     void goRight(uint8_t percentage, uint16_t delay);
     void goRight(uint8_t percentage);
     void stop();
+    void stop(uint16_t delay);
 
 private:
     Timer2& pwmTimer_;

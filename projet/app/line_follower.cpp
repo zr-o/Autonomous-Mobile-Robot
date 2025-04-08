@@ -3,6 +3,7 @@
 #define SCALE_FACTOR 10
 #define MAX_CORRECTION 127
 #define INTEGRAL_LIMIT 10000
+#define BOOST_DELAY 50
 
 // Obtenu a la suite du calcul suivant : 8000000 / 1024 * 1000ms = 7.8125 = 8
 #define CALCULATED_DELAY_CONSTANT 8
@@ -52,8 +53,8 @@ void LineFollower::applyCorrection()
     int8_t error = lineSensor_.readPosition() - 127;
     int8_t correction = calculateCorrection(error);
 
-    int16_t adjustedRightWheelSpeed = rightWheelBaseSpeed + correction;
-    int16_t adjustedLeftWheelSpeed = leftWheelBaseSpeed - correction;
+    int16_t adjustedRightWheelSpeed = rightWheelBaseSpeed - correction;
+    int16_t adjustedLeftWheelSpeed = leftWheelBaseSpeed + correction;
 
     wheels_.setSpeedRight((uint8_t)clamp(adjustedRightWheelSpeed, 0, 255), Direction::FORWARD);
     wheels_.setSpeedLeft((uint8_t)clamp(adjustedLeftWheelSpeed, 0, 255), Direction::FORWARD);
@@ -61,6 +62,9 @@ void LineFollower::applyCorrection()
 
 void LineFollower::followLine(StopCondition condition)
 {
+    // Boost les roues avant de commencer a detecter la ligne
+    wheels_.goForward(255, BOOST_DELAY);
+
     switch (condition)
     {
     case StopCondition::LEFT_TURN:
@@ -99,6 +103,9 @@ void LineFollower::followLine(StopCondition condition)
 
 StopCondition LineFollower::followLine(StopCondition firstCondition, StopCondition secondCondition)
 {
+    // Boost les roues avant de commencer a detecter la ligne
+    wheels_.goForward(255, BOOST_DELAY);
+
     while (true)
     {
         applyCorrection();
@@ -177,6 +184,9 @@ StopCondition LineFollower::followLine(StopCondition firstCondition, StopConditi
 
 void LineFollower::followLine(uint16_t delayMs)
 {
+    // Boost les roues avant de commencer a detecter la ligne
+    wheels_.goForward(255, BOOST_DELAY);
+
     gTimerIsExpired = false;
     delayTimer_.startTimer(OutputComparePin::A, delayMs * CALCULATED_DELAY_CONSTANT);
 
@@ -186,4 +196,15 @@ void LineFollower::followLine(uint16_t delayMs)
     }
 
     wheels_.stop();
+}
+
+void LineFollower::followLine()
+{
+    // Boost les roues avant de commencer a detecter la ligne
+    wheels_.goForward(255, BOOST_DELAY);
+
+    while (true)
+    {
+        applyCorrection();
+    }
 }
