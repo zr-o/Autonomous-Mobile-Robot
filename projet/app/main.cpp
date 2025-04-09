@@ -150,6 +150,16 @@ int main()
 
     robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
 
+    robot.wheels().stop(500);
+    robot.wheels().goForward(100, 2200);
+
+    while(!robot.lineSensor().rightDetected()){
+    robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+    robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+
+
+
+
     //TEST POUR VIRAGE DE 90 A GAUCHE POUR LA PARTI DE LA GRILLE
     /* robot.lineFollower().followLine(StopCondition::CROSS);
     robot.wheels().stop(500);
@@ -193,40 +203,51 @@ robot.lineFollower().followLine(StopCondition::RIGHT_TURN);*/
 
 
 // Boucle maison D a F
+robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
 
- uint8_t distance = robot.distanceSensor().readDistance(); 
-robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // skip E
+robot.wheels().stop(1000);
+robot.wheels().goForward(125,2000);
+
 robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // A F
-if (directionChange == StopCondition::RIGHT_TURN) // A F
-    {
-        turnRightUntilLine();
-    }
+
+robot.wheels().stop(500);
+    robot.wheels().goForward(100, 2200);
+
+    while(!robot.lineSensor().rightDetected()){
+    robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+    robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+    robot.wheels().stop(500);
+
+
+
     robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // A G
+
+    robot.wheels().stop(500);
+    robot.wheels().goForward(100, 2200);
+
+    while(!robot.lineSensor().rightDetected()){
+    robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+    robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+
+    robot.wheels().stop(500);
+
     // Detection du poteau H
-    bool hPostFlag = false;
-        turnRightUntilLine();
-        if (distance > 20) {
-            robot.wheels().stop();
+    bool hPostFlag = true;
+
+        if (robot.distanceSensor().readDistance() > 20) {
             hPostFlag = true;
         }
 
     // Si le poteau H est detecte
     if (hPostFlag) {
-        turnLeftUntilLine();
+        while(!robot.lineSensor().rightDetected()){
+    robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+    robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+    robot.wheels().stop(500);
+    robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
         
     }
-    // Dans tous les cas
-        robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
-
-    for (uint8_t i = 0; i < 3; i++) {
-        if (directionChange == StopCondition::RIGHT_TURN) // A I,E,J, peut-etre cross aussi a tester
-        {
-            turnRightUntilLine();
-        }
-    }
-
-    robot.lineFollower().followLine();
-
+    
     /*
     // grille
 
