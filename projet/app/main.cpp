@@ -3,23 +3,6 @@
 
 Robot &robot = Robot::createRobot();
 
-
- void turnLeftUntilLine() {
-        robot.wheels().goForward(100, 1000);
-        while (robot.lineSensor().noLineDetected())
-        {
-            robot.wheels().goLeft(90);
-        }
-    }
-    
-void turnRightUntilLine() {
-    robot.wheels().goForward(100, 1000);
-    while (robot.lineSensor().noLineDetected())
-    {
-        robot.wheels().goRight(90);
-    }
-}
-
     
 int main()
 {
@@ -110,7 +93,6 @@ int main()
         robot.wheels().goForward(100, 500);
         while (robot.lineSensor().noLineDetected())
         {   
-            robot.wheels().goForward(100, 500);
             robot.wheels().goLeft(110);
         }
     }
@@ -156,6 +138,7 @@ int main()
     while(!robot.lineSensor().rightDetected()){
     robot.wheels().setSpeedLeft(125, Direction::FORWARD);
     robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+    robot.wheels().stop(500);
 
 
 
@@ -206,7 +189,7 @@ robot.lineFollower().followLine(StopCondition::RIGHT_TURN);*/
 robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
 
 robot.wheels().stop(1000);
-robot.wheels().goForward(125,2000);
+robot.wheels().goForward(100,1000);
 
 robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // A F
 
@@ -218,7 +201,8 @@ robot.wheels().stop(500);
     robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
     robot.wheels().stop(500);
 
-
+    // Detection du poteau H
+    bool hPostFlag = false;
 
     robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // A G
 
@@ -231,23 +215,74 @@ robot.wheels().stop(500);
 
     robot.wheels().stop(500);
 
-    // Detection du poteau H
-    bool hPostFlag = true;
+    /*if (robot.distanceSensor().readDistance() > 20) {
+        hPostFlag = true;
+    }*/
 
-        if (robot.distanceSensor().readDistance() > 20) {
-            hPostFlag = true;
-        }
+        
 
     // Si le poteau H est detecte
     if (hPostFlag) {
         while(!robot.lineSensor().rightDetected()){
     robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+    robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}   //tourne vers I
+    robot.wheels().stop(500);
+    robot.lineFollower().followLine(StopCondition::RIGHT_TURN); //avance vers I
+    
+    robot.wheels().stop(500);
+    robot.wheels().goForward(100, 2200);
+    
+    while(!robot.lineSensor().rightDetected()){
+        robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+        robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}   //tourne vers E
+}
+else {
+    robot.lineFollower().followLine(StopCondition::RIGHT_TURN); //avance vers H
+    robot.wheels().stop(500);
+    robot.wheels().goForward(100, 2200);
+    while(!robot.lineSensor().rightDetected()){
+        robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+        robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}   //tourne vers I
+        robot.wheels().stop(500);
+        robot.lineFollower().followLine(StopCondition::RIGHT_TURN); //avance vers I
+    
+    robot.wheels().stop(500);
+    robot.wheels().goForward(100, 2200);
+    
+    while(!robot.lineSensor().rightDetected()){
+        robot.wheels().setSpeedLeft(125, Direction::FORWARD);   //tourne vers E
+        robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+}
+
+robot.wheels().stop(500);
+robot.lineFollower().followLine(StopCondition::CROSS);
+robot.wheels().stop(500);
+robot.wheels().goForward(100, 2200);
+while(!robot.lineSensor().rightDetected()){
+    robot.wheels().setSpeedLeft(125, Direction::FORWARD);
     robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
     robot.wheels().stop(500);
-    robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
-        
-    }
+
+
+robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
+robot.wheels().stop(500);
+robot.wheels().goForward(100, 1500);
+robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
+
+
+robot.wheels().stop(500);
+robot.wheels().goForward(100, 2200);
+while(!robot.lineSensor().rightDetected()){
+    robot.wheels().setSpeedLeft(125, Direction::FORWARD);
+    robot.wheels().setSpeedRight(125, Direction::BACKWARDS);}
+    robot.wheels().stop(500);
+
+
+    robot.lineFollower().followLine(StopCondition::CROSS);
+
     
+
+
     /*
     // grille
 
