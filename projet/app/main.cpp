@@ -1,10 +1,28 @@
 #include "robot.h"
 #include "debug.h"
 
+Robot &robot = Robot::createRobot();
+
+
+ void turnLeftUntilLine() {
+        robot.wheels().goForward(100, 1000);
+        while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goLeft(90);
+        }
+    }
+    
+void turnRightUntilLine() {
+    robot.wheels().goForward(100, 1000);
+    while (robot.lineSensor().noLineDetected())
+    {
+        robot.wheels().goRight(90);
+    }
+}
+
+    
 int main()
 {
-
-    Robot &robot = Robot::createRobot();
 
     // PARTIE BOUTON DEBUT
     uint8_t savedDirection[2] = {1, 1};
@@ -14,9 +32,9 @@ int main()
         //DEBUG_PRINT(robot.lineFollower().calculateCorrection(robot.lineSensor().readPosition() - 127));
        robot.lineFollower().applyCorrection();
         //DEBUG_PRINT(robot.lineSensor().readPosition());
-    }/*
-
-    /*while (savedValuesCounter < 2)
+    }*/
+    
+    while (savedValuesCounter < 2)
     {
 
         if (robot.externButton().isPressed())
@@ -41,7 +59,7 @@ int main()
 
     DEBUG_PRINT(savedDirection[0]);
     _delay_ms(1000);
-    DEBUG_PRINT(savedDirection[1]);*/
+    DEBUG_PRINT(savedDirection[1]);
 
     // DETECTION DE DEBUT A OU J
     StopCondition s = robot.lineFollower().followLine(StopCondition::CROSS, StopCondition::NO_LINE);
@@ -63,14 +81,17 @@ int main()
 
     if (savedDirection[0] == 1)
     {
+        robot.wheels().goForward(100, 500);
         while (robot.lineSensor().noLineDetected())
-        {
+        {   
+            
             robot.wheels().goLeft(110);
         }
     }
 
     if (savedDirection[0] == 0)
     {
+        robot.wheels().goForward(100, 500);
         while (robot.lineSensor().noLineDetected())
         {
             robot.wheels().goRight(110);
@@ -85,22 +106,27 @@ int main()
     robot.tone().turnOffNote();
 
     if (savedDirection[1] == 1)
-    {
+    {   
+        robot.wheels().goForward(100, 500);
         while (robot.lineSensor().noLineDetected())
-        {
+        {   
+            robot.wheels().goForward(100, 500);
             robot.wheels().goLeft(110);
         }
     }
 
     if (savedDirection[1] == 0)
-    {
+    {   
+        robot.wheels().goForward(100, 500);
         while (robot.lineSensor().noLineDetected())
-        {
+        {   
             robot.wheels().goRight(110);
         }
     }
 
     robot.wheels().stop(500);
+    
+ 
     StopCondition directionChange = robot.lineFollower().followLine(StopCondition::RIGHT_TURN, StopCondition::LEFT_TURN);
 
     if (directionChange == StopCondition::RIGHT_TURN)
@@ -168,74 +194,75 @@ robot.lineFollower().followLine(StopCondition::RIGHT_TURN);*/
 
 // Boucle maison D a F
 
+ uint8_t distance = robot.distanceSensor().readDistance(); 
 robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // skip E
-robot.lineFollower().followLine();
+robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // A F
 if (directionChange == StopCondition::RIGHT_TURN) // A F
     {
-        robot.wheels().goForward(100, 1000);
-        while (robot.lineSensor().noLineDetected())
-        {
-            robot.wheels().goRight(90);
-        }
+        turnRightUntilLine();
     }
+    robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // A G
     // Detection du poteau H
     bool hPostFlag = false;
-    while(true) {
-
-        robot.wheels().goRight(90);
-        uint8_t distance = robot.distanceSensor().readDistance();
-
+        turnRightUntilLine();
         if (distance > 20) {
             robot.wheels().stop();
             hPostFlag = true;
-            break;
         }
-    }
 
     // Si le poteau H est detecte
     if (hPostFlag) {
-    while (robot.lineSensor().noLineDetected())
-        {
-            robot.wheels().goLeft(90);
-        }
+        turnLeftUntilLine();
+        
     }
-    // S'il y a pas de poteau
-    else {
+    // Dans tous les cas
+        robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
 
-         while (robot.lineSensor().noLineDetected())
+    for (uint8_t i = 0; i < 3; i++) {
+        if (directionChange == StopCondition::RIGHT_TURN) // A I,E,J, peut-etre cross aussi a tester
         {
-            robot.wheels().goRight(90);
-        }
-
-        robot.lineFollower().followLine();
-
-    }
-
-    if (directionChange == StopCondition::RIGHT_TURN) // A I , peut-etre cross aussi a tester
-    {
-        robot.wheels().goForward(100, 1000);
-        while (robot.lineSensor().noLineDetected())
-        {
-            robot.wheels().goRight(90);
+            turnRightUntilLine();
         }
     }
 
-      if (directionChange == StopCondition::RIGHT_TURN) // A E
-    {
-        robot.wheels().goForward(100, 1000);
-        while (robot.lineSensor().noLineDetected())
-        {
-            robot.wheels().goRight(90);
+    robot.lineFollower().followLine();
+
+    /*
+    // grille
+
+    if(directionChange == StopCondition::CROSS) {
+
+        if (distance < 20) {
+            robot.lineFollower().followLine(); 
         }
+
+       turnRightUntilLine();
+        if (distance > 20) {
+            robot.wheels().stop();
+            hPostFlag = true;
+        }
+
+        turnLeftUntilLine();
+        turnLeftUntilLine(); // pour aller a M
+        
     }
+    bool robotAtN = false;
+    if(directionChange == StopCondition::CROSS) {
+
+         if (distance < 20) {
+            robot.lineFollower().followLine();
+        }
+
+       turnRightUntilLine();
+        if (distance > 20) {
+            robot.wheels().stop();
+            hPostFlag = true;
+        }
+
+        turnLeftUntilLine();
+        turnLeftUntilLine(); // pour aller a P
 
 
-     if (directionChange == StopCondition::RIGHT_TURN) // A J
-    {
-        robot.wheels().goForward(100, 1000);
-        while (robot.lineSensor().noLineDetected())
-        {
-            robot.wheels().goRight(90);
-        }
     }
+    */
 }
