@@ -166,5 +166,76 @@ robot.wheels().goForward(100, 1000);
 robot.lineFollower().followLine(StopCondition::RIGHT_TURN);*/
 
 
+// Boucle maison D a F
 
+robot.lineFollower().followLine(StopCondition::RIGHT_TURN); // skip E
+robot.lineFollower().followLine();
+if (directionChange == StopCondition::RIGHT_TURN) // A F
+    {
+        robot.wheels().goForward(100, 1000);
+        while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goRight(90);
+        }
+    }
+    // Detection du poteau H
+    bool hPostFlag = false;
+    while(true) {
+
+        robot.wheels().goRight(90);
+        uint8_t distance = robot.distanceSensor().readDistance();
+
+        if (distance > 20) {
+            robot.wheels().stop();
+            hPostFlag = true;
+            break;
+        }
+    }
+
+    // Si le poteau H est detecte
+    if (hPostFlag) {
+    while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goLeft(90);
+        }
+    }
+    // S'il y a pas de poteau
+    else {
+
+         while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goRight(90);
+        }
+
+        robot.lineFollower().followLine();
+
+    }
+
+    if (directionChange == StopCondition::RIGHT_TURN) // A I , peut-etre cross aussi a tester
+    {
+        robot.wheels().goForward(100, 1000);
+        while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goRight(90);
+        }
+    }
+
+      if (directionChange == StopCondition::RIGHT_TURN) // A E
+    {
+        robot.wheels().goForward(100, 1000);
+        while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goRight(90);
+        }
+    }
+
+
+     if (directionChange == StopCondition::RIGHT_TURN) // A J
+    {
+        robot.wheels().goForward(100, 1000);
+        while (robot.lineSensor().noLineDetected())
+        {
+            robot.wheels().goRight(90);
+        }
+    }
 }
