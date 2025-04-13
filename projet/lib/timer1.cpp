@@ -1,12 +1,7 @@
 #include "timer1.h"
 
 Timer1::Timer1()
-{
-    setTimerMode(TimerMode::NORMAL);
-    setPrescaler(Prescaler::PRESCALER_1);
-    setCompareOutputModeA(CompareOutputMode::NORMAL);
-    setCompareOutputModeB(CompareOutputMode::NORMAL);
-    allowInterrupts(OutputComparePin::NONE);
+{    
 }
 
 void Timer1::setPrescaler(Prescaler value)
@@ -221,8 +216,12 @@ void Timer1::disallowInterrupts(OutputComparePin pin)
 
 void Timer1::initializeTimerForDelays()
 {
+    cli();
+
     setPrescaler(Prescaler::PRESCALER_1024);
     setTimerMode(TimerMode::CTC);
+
+    sei();
 }
 void Timer1::startTimer(OutputComparePin pin, uint16_t calculatedDelay)
 {
@@ -231,18 +230,21 @@ void Timer1::startTimer(OutputComparePin pin, uint16_t calculatedDelay)
     case OutputComparePin::A:
         setTimerValue(0);
         setCompareValue(OutputComparePin::A, calculatedDelay);
+        TIFR1 |= (1 << OCF1A);
         allowInterrupts(OutputComparePin::A);
         break;
 
     case OutputComparePin::B:
         setTimerValue(0);
         setCompareValue(OutputComparePin::B, calculatedDelay);
+        TIFR1 |= (1 << OCF1B);
         allowInterrupts(OutputComparePin::B);
         break;
 
     case OutputComparePin::BOTH:
         setTimerValue(0);
         setCompareValue(OutputComparePin::BOTH, calculatedDelay);
+        TIFR1 |= (1 << OCF1A) | (1 << OCF1B)
         allowInterrupts(OutputComparePin::BOTH);
         break;
 

@@ -57,7 +57,7 @@ void Wheels::stop()
 
 void Wheels::goForward(uint8_t percentage, uint16_t delay)
 {
-    //Boost
+    // Boost
     setSpeedLeft(255, Direction::FORWARD);
     setSpeedRight(255, Direction::FORWARD);
     _delay_ms(50);
@@ -78,8 +78,8 @@ void Wheels::goForward(uint8_t percentage)
 
 void Wheels::goBackwards(uint8_t percentage, uint16_t delay)
 {
-    //Boost
-     setSpeedLeft(255, Direction::BACKWARDS);
+    // Boost
+    setSpeedLeft(255, Direction::BACKWARDS);
     setSpeedRight(255, Direction::BACKWARDS);
     _delay_ms(50);
 
@@ -99,7 +99,7 @@ void Wheels::goBackwards(uint8_t percentage)
 
 void Wheels::goLeft(uint8_t percentage, uint16_t delay)
 {
-    //Boost
+    // Boost
     setSpeedLeft(0, Direction::FORWARD);
     setSpeedRight(255, Direction::FORWARD);
     _delay_ms(50);
@@ -136,6 +136,46 @@ void Wheels::goRight(uint8_t percentage)
 {
     setSpeedLeft(percentage, Direction::FORWARD);
     setSpeedRight(0, Direction::FORWARD);
+}
+
+void Wheels::pivotLeft(uint8_t percentage, uint16_t delay)
+{
+    setSpeedLeft(255, Direction::BACKWARDS);
+    setSpeedRight(255, Direction::FORWARD);
+    _delay_ms(50);
+
+    setSpeedLeft(percentage, Direction::BACKWARDS);
+    setSpeedRight(percentage, Direction::FORWARD);
+
+    variableDelayMs(delay);
+
+    stop();
+}
+
+void Wheels::pivotLeft(uint8_t percentage)
+{
+    setSpeedLeft(percentage, Direction::BACKWARDS);
+    setSpeedRight(percentage - 2, Direction::FORWARD);
+}
+
+void Wheels::pivotRight(uint8_t percentage, uint16_t delay)
+{
+    setSpeedLeft(255, Direction::FORWARD);
+    setSpeedRight(255, Direction::BACKWARDS);
+    _delay_ms(50);
+
+    setSpeedLeft(percentage, Direction::FORWARD);
+    setSpeedRight(percentage - 2, Direction::BACKWARDS);
+
+    variableDelayMs(delay);
+
+    stop();
+}
+
+void Wheels::pivotRight(uint8_t percentage)
+{
+    setSpeedLeft(percentage, Direction::FORWARD);
+    setSpeedRight(percentage, Direction::BACKWARDS);
 }
 
 void Wheels::stop(uint16_t delay)
