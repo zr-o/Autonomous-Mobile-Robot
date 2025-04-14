@@ -32,21 +32,25 @@ class Path
 {
 public:
     Path();
+    void continueAfterTurn();
+    void turnUntilRightDetected();
+    void turnUntilLeftDetected();
     void selectBCDirection();
     Position findStartingPosition();
     //void finishPathFromB();
     //void finishPathFromGrill();
     void doPath();
 
-    //void doPathFromBToD();
-    //void doPathFromDToJ();
-    //void doPathFromJtoGrill();
+    void doPathFromBToD();
+    void doPathFromDToJ();
+    void doPathFromAToB();
+    void doPathFromJtoGrill();
     //void doPathFromGrillToA();
-    //void doPathFromAtoB
 
 private:
     Robot &robot_;
     Position currentPosition_ = Position::START;
     uint8_t buttonPressMemory_[2] = {0};
+    bool hPostFlag = false;
 };
 #endif
