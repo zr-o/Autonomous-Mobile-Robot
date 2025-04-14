@@ -104,6 +104,14 @@ void LineFollower::followLine(StopCondition condition)
         }
         wheels_.stop();
         break;
+
+    case StopCondition::PICKAXE_TURN:
+        while (!lineSensor_.pickaxeTurnDetected())
+        {
+            applyCorrection(Direction::FORWARD);
+        }
+        wheels_.stop();
+        break;
     }
 }
 
@@ -150,6 +158,14 @@ StopCondition LineFollower::followLine(StopCondition firstCondition, StopConditi
                 return firstCondition;
             }
             break;
+
+        case StopCondition::PICKAXE_TURN:
+            if (lineSensor_.pickaxeTurnDetected())
+            {
+                wheels_.stop();
+                return firstCondition;
+            }
+            break;
         }
 
         switch (secondCondition)
@@ -183,6 +199,14 @@ StopCondition LineFollower::followLine(StopCondition firstCondition, StopConditi
             {
                 wheels_.stop();
                 return secondCondition;
+            }
+            break;
+
+        case StopCondition::PICKAXE_TURN:
+            if (lineSensor_.pickaxeTurnDetected())
+            {
+                wheels_.stop();
+                return firstCondition;
             }
             break;
         }
@@ -260,6 +284,28 @@ void LineFollower::smartTurnLeft(TurnType lineType)
 
         break;
 
+    case TurnType::SMALL_TURN:
+        wheels_.goForward(90, 2000);
+
+        wheels_.stop(500);
+
+        wheels_.pivotLeft(255);
+        _delay_ms(10);
+
+        while (!lineSensor_.leftDetected())
+        {
+            wheels_.pivotLeft(90);
+        }
+
+        while (!lineSensor_.middleDetected())
+        {
+            wheels_.pivotLeft(90);
+        }
+
+        wheels_.stop(500);
+
+        break;
+
     case TurnType::CROSSROAD:
         wheels_.goForward(90, 1000);
         followLine(1800);
@@ -309,6 +355,28 @@ void LineFollower::smartTurnRight(TurnType lineType)
     {
     case TurnType::SHARP_TURN:
         wheels_.goForward(90, 2500);
+
+        wheels_.stop(500);
+
+        wheels_.pivotRight(255);
+        _delay_ms(10);
+
+        while (!lineSensor_.rightDetected())
+        {
+            wheels_.pivotRight(90);
+        }
+
+        while (!lineSensor_.middleDetected())
+        {
+            wheels_.pivotRight(90);
+        }
+
+        wheels_.stop(500);
+
+        break;
+
+    case TurnType::SMALL_TURN:
+        wheels_.goForward(90, 2000);
 
         wheels_.stop(500);
 

@@ -33,19 +33,17 @@ class Path
 public:
     Path();
     void continueAfterTurn();
-    void turnUntilRightDetected();
-    void turnUntilLeftDetected();
     void selectBCDirection();
     Position findStartingPosition();
-    //void finishPathFromB();
-    //void finishPathFromGrill();
+    void finishPathFromB();
+    void finishPathFromGrill();
     void doPath();
 
     void doPathFromBToD();
     void doPathFromDToJ();
     void doPathFromAToB();
     void doPathFromJtoGrill();
-    //void doPathFromGrillToA();
+    void doPathFromGrillToA();
 
 private:
     Robot &robot_;

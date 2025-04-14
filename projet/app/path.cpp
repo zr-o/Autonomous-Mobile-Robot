@@ -6,11 +6,10 @@ Path::Path() : robot_(Robot::createRobot())
 {
 }
 
-void Path::continueAfterTurn() {
+void Path::continueAfterTurn()
+{
 
-    robot_.wheels().goForward(100,1000);
-    
-
+    robot_.wheels().goForward(100, 1000);
 }
 
 void Path::selectBCDirection()
@@ -62,102 +61,218 @@ Position Path::findStartingPosition()
     }
 }
 
-void Path::doPathFromBToD() {
+void Path::doPathFromBToD()
+{
 
     robot_.tone().playNote(46);
     _delay_ms(1000);
     robot_.tone().turnOffNote();
-    robot_.wheels().goForward(100,500);
+    robot_.wheels().goForward(100, 500);
 
-    if (buttonPressMemory_[0] == 0) {
+    if (buttonPressMemory_[0] == 0)
+    {
         robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
     }
 
-    else {
+    else
+    {
         robot_.lineFollower().smartTurnLeft(TurnType::ON_PLACE);
     }
 
     robot_.lineFollower().followLine(StopCondition::NO_LINE);
 
-     robot_.tone().playNote(46);
+    robot_.tone().playNote(46);
     _delay_ms(1000);
     robot_.tone().turnOffNote();
-    robot_.wheels().goForward(100,500);
+    robot_.wheels().goForward(100, 500);
 
-    if (buttonPressMemory_[1] == 0) {
+    if (buttonPressMemory_[1] == 0)
+    {
         robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
     }
 
-    else {
+    else
+    {
         robot_.lineFollower().smartTurnLeft(TurnType::ON_PLACE);
     }
 
     robot_.lineFollower().followLine(StopCondition::LEFT_TURN, StopCondition::RIGHT_TURN);
 
-    if (buttonPressMemory_[1] == 0) {
-        robot_.wheels().goForward(100,1000);
+    if (buttonPressMemory_[1] == 0)
+    {
+        robot_.wheels().goForward(100, 1000);
         robot_.lineFollower().smartTurnLeft(TurnType::ON_PLACE);
     }
 
-    else {
-        robot_.wheels().goForward(100,1000);
+    else
+    {
+        robot_.wheels().goForward(100, 1000);
         robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
     }
 
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
     robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
-
 }
 
-void Path::doPathFromDToJ() {
+void Path::doPathFromDToJ()
+{
 
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
-    
+
     continueAfterTurn();
-    
+
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
-    robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+    robot_.lineFollower().smartTurnRight(TurnType::CROSSROAD);
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
-    robot_.lineFollower().followLine(4000);
+    robot_.lineFollower().followLine(3000);
+    robot_.wheels().goRight(90, 100);
     robot_.wheels().stop(1000);
 
-    if (robot_.distanceSensor().readDistance() > 120) {
-        hPostFlag = true;
+    if (robot_.distanceSensor().readDistance() > 120)
+    {
+
+        robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
+        robot_.lineFollower().followLine(StopCondition::PICKAXE_TURN);
+        robot_.lineFollower().smartTurnRight(TurnType::SMALL_TURN);
+
+        robot_.lineFollower().followLine(StopCondition::CROSS);
+        robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
     }
 
-    if (hPostFlag) {
-
-       robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
-       robot_.lineFollower().followLine(StopCondition::CROSS);
-       robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
-       robot_.lineFollower().followLine(StopCondition::CROSS);
-       robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
-    }
-    
-    else {
+    else
+    {
         robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
         robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
         robot_.lineFollower().followLine(StopCondition::CROSS);
         robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
-    }  
-
+    }
 
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
     continueAfterTurn();
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
     robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
-
 }
 
-void Path::doPathFromAToB() {
-    
+void Path::doPathFromAToB()
+{
+
     robot_.lineFollower().followLine(StopCondition::NO_LINE);
 }
 
-void Path::doPathFromJtoGrill() {
+void Path::doPathFromJtoGrill()
+{
 
     robot_.lineFollower().followLine(StopCondition::CROSS);
+}
+/*
+void Path::doHalfGrill() {
 
+    robot_.wheels().goForward(90,500);
+    if (robot_.distanceSensor().readDistance() > 120)
+
+}
+*/
+
+void Path::doPathFromGrillToA()
+{
+
+    robot_.wheels().goForward(90, 500);
+    robot_.lineFollower().followLine(3000);
+    robot_.wheels().stop(1000);
+
+    if (robot_.distanceSensor().readDistance() > 120)
+    {
+        robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
+        robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
+        robot_.lineFollower().smartTurnLeft(TurnType::SHARP_TURN);
+        robot_.lineFollower().followLine(2000);
+        robot_.wheels().stop(1000);
+
+        if (robot_.distanceSensor().readDistance() > 120)
+        {
+            robot_.lineFollower().followLineBackwards(2000);
+            robot_.lineFollower().smartTurnLeft(TurnType::ON_PLACE);
+            robot_.lineFollower().followLine(StopCondition::CROSS);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            robot_.lineFollower().smartTurnRight(TurnType::CROSSROAD);
+            robot_.lineFollower().followLine(StopCondition::CROSS);
+            robot_.lineFollower().smartTurnLeft(TurnType::CROSSROAD);
+            robot_.wheels().stop(1000);
+        }
+
+        else
+        {
+            robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
+            robot_.lineFollower().smartTurnLeft(TurnType::CROSSROAD);
+            robot_.lineFollower().followLine(StopCondition::CROSS);
+            robot_.lineFollower().smartTurnRight(TurnType::CROSSROAD);
+            robot_.wheels().stop(1000);
+        }
+    }
+
+    else
+    {
+        robot_.lineFollower().followLine(StopCondition::CROSS);
+        continueAfterTurn();
+        robot_.lineFollower().followLine(StopCondition::CROSS);
+        continueAfterTurn();
+        robot_.lineFollower().followLine(2300);
+        robot_.wheels().stop(1000);
+    }
+
+    if (robot_.distanceSensor().readDistance() > 120)
+    {
+        robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
+        robot_.lineFollower().followLine(StopCondition::CROSS);
+        robot_.lineFollower().smartTurnLeft(TurnType::SHARP_TURN);
+        robot_.lineFollower().followLine(2000);
+        robot_.wheels().stop(1000);
+
+        if (robot_.distanceSensor().readDistance() > 120)
+        {
+            robot_.lineFollower().followLineBackwards(2000);
+            robot_.lineFollower().smartTurnLeft(TurnType::ON_PLACE);
+            robot_.lineFollower().followLine(StopCondition::CROSS);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::CROSS);
+            robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+            continueAfterTurn();
+        }
+
+        else
+        {
+            robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
+            continueAfterTurn();
+            robot_.lineFollower().followLine(StopCondition::CROSS);
+            robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+        }
+    }
+
+    else
+    {
+        robot_.lineFollower().followLine(StopCondition::CROSS);
+        continueAfterTurn();
+        robot_.lineFollower().followLine(StopCondition::CROSS);
+        robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+        robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+        continueAfterTurn();
+    }
+    robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
+    robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
 }
 
 void Path::doPath()
@@ -171,11 +286,26 @@ void Path::doPath()
     if (startingPosition == Position::A)
     {
         currentPosition_ = Position::B;
-        //doPathFromB();
+        finishPathFromB();
     }
     else
     {
         currentPosition_ = Position::START_OF_GRILL;
-        //doPathFromGrill()
+        finishPathFromGrill();
     }
+}
+
+void Path::finishPathFromB()
+{
+    doPathFromBToD();
+    doPathFromDToJ();
+    doPathFromJtoGrill();
+    doPathFromGrillToA();
+}
+void Path::finishPathFromGrill()
+{
+    doPathFromGrillToA();
+    doPathFromAToB();
+    doPathFromBToD();
+    doPathFromDToJ();
 }

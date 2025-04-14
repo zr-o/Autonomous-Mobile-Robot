@@ -244,7 +244,7 @@ void Timer1::startTimer(OutputComparePin pin, uint16_t calculatedDelay)
     case OutputComparePin::BOTH:
         setTimerValue(0);
         setCompareValue(OutputComparePin::BOTH, calculatedDelay);
-        TIFR1 |= (1 << OCF1A) | (1 << OCF1B)
+        TIFR1 |= (1 << OCF1A) | (1 << OCF1B);
         allowInterrupts(OutputComparePin::BOTH);
         break;
 

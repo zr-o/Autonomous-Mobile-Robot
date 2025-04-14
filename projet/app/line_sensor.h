@@ -15,6 +15,7 @@ public:
     bool leftDetected();
     bool rightDetected();
     bool leftTurnDetected();
+    bool pickaxeTurnDetected();
     bool rightTurnDetected();
     bool crossDetected();
     bool noLineDetected();

@@ -10,14 +10,16 @@ enum class StopCondition
     LEFT_TURN,
     RIGHT_TURN,
     CROSS,
-    NO_LINE
+    NO_LINE,
+    PICKAXE_TURN
 };
 
 enum class TurnType
 {
     SHARP_TURN,
     CROSSROAD,
-    ON_PLACE
+    ON_PLACE,
+    SMALL_TURN
 };
 
 class LineFollower

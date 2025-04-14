@@ -61,6 +61,11 @@ bool LineSensor::noLineDetected()
            !rightMiddleDetected() && !rightDetected();
 }
 
+bool LineSensor::pickaxeTurnDetected()
+{
+    return leftMiddleDetected() && middleDetected() && rightMiddleDetected();
+}
+
 
 uint8_t LineSensor::sensorsCount()
 {

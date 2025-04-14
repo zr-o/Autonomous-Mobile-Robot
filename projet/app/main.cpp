@@ -1,8 +1,13 @@
 #include "path.h"
+#include "debug.h"
 
 int main(){
-  Robot& robot = Robot::createRobot();
 
+Path path = Path();
+
+path.doPath();
+ 
+/*
 robot.lineFollower().followLine(StopCondition::CROSS);
 robot.wheels().goForward(90, 500);
 robot.lineFollower().followLine(2300);
@@ -77,7 +82,7 @@ robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
 robot.wheels().goForward(90, 500);
 robot.lineFollower().followLine(StopCondition::RIGHT_TURN);
 
-
+*/
 
 
 
