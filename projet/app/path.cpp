@@ -9,7 +9,58 @@ Path::Path() : robot_(Robot::createRobot())
 void Path::continueAfterTurn()
 {
 
-    robot_.wheels().goForward(100, 1000);
+    robot_.wheels().goForward(100, 500);
+}
+
+void Path::finishDelFlag() {
+    
+    while (true) {
+                robot_.led().lightUp(Color::RED);
+                _delay_ms(250);
+                robot_.led().lightUp(Color::GREEN);
+                _delay_ms(250);
+            }
+}
+
+void Path::delHPostFlag() {
+
+    robot_.wheels().stop();
+
+    if (hPostFlag) {
+        for (uint8_t i = 0; i < 8; i++) {
+            
+            robot_.led().lightUp(Color::RED);
+            _delay_ms(125);
+            robot_.led().lightUp(Color::OFF);
+            _delay_ms(125);
+
+        }
+    }
+
+    else {
+        for (uint8_t i = 0; i < 8; i++) {
+            
+            robot_.led().lightUp(Color::GREEN);
+            _delay_ms(125);
+            robot_.led().lightUp(Color::OFF);
+            _delay_ms(125);
+
+        }
+    }
+}
+
+void Path::pathFoundGrillFlag() {
+
+    robot_.wheels().stop();
+
+    for (uint8_t i = 0; i < 8; i++) {
+            
+            robot_.led().lightUp(Color::GREEN);
+            _delay_ms(125);
+            robot_.led().lightUp(Color::OFF);
+            _delay_ms(125);
+
+        }
 }
 
 void Path::selectBCDirection()
@@ -130,6 +181,8 @@ void Path::doPathFromDToJ()
 
     if (robot_.distanceSensor().readDistance() > 120)
     {
+        hPostFlag = true;
+        delHPostFlag();
 
         robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
         robot_.lineFollower().followLine(StopCondition::PICKAXE_TURN);
@@ -164,24 +217,16 @@ void Path::doPathFromJtoGrill()
 
     robot_.lineFollower().followLine(StopCondition::CROSS);
 }
-/*
-void Path::doHalfGrill() {
 
-    robot_.wheels().goForward(90,500);
-    if (robot_.distanceSensor().readDistance() > 120)
-
-}
-*/
-
-void Path::doPathFromGrillToA()
-{
+void Path::doFirstHalfGrill() {
 
     robot_.wheels().goForward(90, 500);
-    robot_.lineFollower().followLine(3000);
+    robot_.lineFollower().followLine(5000);
     robot_.wheels().stop(1000);
 
     if (robot_.distanceSensor().readDistance() > 120)
     {
+        robot_.lineFollower().followLineBackwards(2000);
         robot_.lineFollower().smartTurnRight(TurnType::ON_PLACE);
         robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
         robot_.lineFollower().smartTurnLeft(TurnType::SHARP_TURN);
@@ -196,6 +241,7 @@ void Path::doPathFromGrillToA()
             continueAfterTurn();
             robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
             robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+            pathFoundGrillFlag();
             robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
             continueAfterTurn();
             robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
@@ -206,7 +252,8 @@ void Path::doPathFromGrillToA()
         }
 
         else
-        {
+        {   
+            pathFoundGrillFlag();
             robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
             continueAfterTurn();
             robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
@@ -217,8 +264,9 @@ void Path::doPathFromGrillToA()
         }
     }
 
-    else
+     else
     {
+        pathFoundGrillFlag();
         robot_.lineFollower().followLine(StopCondition::CROSS);
         continueAfterTurn();
         robot_.lineFollower().followLine(StopCondition::CROSS);
@@ -226,6 +274,9 @@ void Path::doPathFromGrillToA()
         robot_.lineFollower().followLine(2300);
         robot_.wheels().stop(1000);
     }
+}
+
+void Path::doSecondHalfGrill() {
 
     if (robot_.distanceSensor().readDistance() > 120)
     {
@@ -243,6 +294,7 @@ void Path::doPathFromGrillToA()
             continueAfterTurn();
             robot_.lineFollower().followLine(StopCondition::CROSS);
             robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
+            pathFoundGrillFlag();
             robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
             continueAfterTurn();
             robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
@@ -255,6 +307,7 @@ void Path::doPathFromGrillToA()
 
         else
         {
+            pathFoundGrillFlag();
             robot_.lineFollower().followLine(StopCondition::LEFT_TURN);
             continueAfterTurn();
             robot_.lineFollower().followLine(StopCondition::CROSS);
@@ -263,7 +316,8 @@ void Path::doPathFromGrillToA()
     }
 
     else
-    {
+    {   
+        pathFoundGrillFlag();
         robot_.lineFollower().followLine(StopCondition::CROSS);
         continueAfterTurn();
         robot_.lineFollower().followLine(StopCondition::CROSS);
@@ -271,6 +325,14 @@ void Path::doPathFromGrillToA()
         robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
         continueAfterTurn();
     }
+
+}
+
+void Path::doPathFromGrillToA()
+{
+    doFirstHalfGrill();
+    doSecondHalfGrill();
+
     robot_.lineFollower().followLine(StopCondition::RIGHT_TURN);
     robot_.lineFollower().smartTurnRight(TurnType::SHARP_TURN);
 }
@@ -301,6 +363,7 @@ void Path::finishPathFromB()
     doPathFromDToJ();
     doPathFromJtoGrill();
     doPathFromGrillToA();
+    finishDelFlag();
 }
 void Path::finishPathFromGrill()
 {
@@ -308,4 +371,5 @@ void Path::finishPathFromGrill()
     doPathFromAToB();
     doPathFromBToD();
     doPathFromDToJ();
+    finishDelFlag();
 }

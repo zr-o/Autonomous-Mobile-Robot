@@ -28,6 +28,7 @@ enum class Position
     END
 };
 
+
 class Path
 {
 public:
@@ -38,11 +39,15 @@ public:
     void finishPathFromB();
     void finishPathFromGrill();
     void doPath();
-
+    void finishDelFlag();
+    void delHPostFlag();
+    void pathFoundGrillFlag();
     void doPathFromBToD();
     void doPathFromDToJ();
     void doPathFromAToB();
     void doPathFromJtoGrill();
+    void doFirstHalfGrill();
+    void doSecondHalfGrill();
     void doPathFromGrillToA();
 
 private:
