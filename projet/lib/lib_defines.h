@@ -4,7 +4,8 @@
 #define F_CPU 8000000UL
 
 // common defines
-#define BITS_8_MAX_VALUE 256
+#define BITS_8_MAX_VALUE 255
+#define BITS_8_MID_VALUE 127
 #define PERCENTAGE_DIVIDOR 100
 
 // global_functions defines

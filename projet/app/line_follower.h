@@ -26,8 +26,6 @@ class LineFollower
 {
 public:
     LineFollower(Timer1 &delayTimer, Wheels &wheels, LineSensor &lineSensor);
-    int8_t calculateCorrection(int8_t error);
-    void applyCorrection(Direction direction);
     void followLine(StopCondition condition);
     StopCondition followLine(StopCondition firstCondition, StopCondition secondCondition);
     void followLine(uint16_t delayMs);
@@ -42,9 +40,10 @@ private:
     LineSensor &lineSensor_;
 
     // Pour pouvoir simuler des floats, nous utilisons une arithmetique a virgule fixe. Example : 1.0 vaut 1.0 * 1024 = 1024
-    int16_t kp_ = 512;
+    // Valeurs calcules experimentalement
+    int16_t kp_ = 1024;
     int16_t ki_ = 0;
-    int16_t kd_ = 5000;
+    int16_t kd_ = 10240;
 
     const uint8_t leftWheelBaseSpeed = 88;
     const uint8_t rightWheelBaseSpeed = 90;
@@ -52,7 +51,8 @@ private:
     int16_t errorIntegral_;
     int8_t previousError_;
 
-    bool checkCondition();
+    int8_t calculateCorrection(int8_t error);
+    void applyCorrection(Direction direction);
 };
 
 #endif

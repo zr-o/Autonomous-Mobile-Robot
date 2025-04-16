@@ -22,38 +22,49 @@ enum class Position
     N,
     O,
     P,
-    START_OF_GRILL,
+    START_TOP_OF_GRILL,
+    START_MIDDLE_OF_GRILL,
+    START_BOTTOM_OF_GRILL,
+    MIDDLE_TOP_OF_GRILL,
     MIDDLE_OF_GRILL,
-    END_OF_GRILL,
-    END
+    MIDDLE_BOTTOM_OF_GRILL,
+    END_TOP_OF_GRILL,
+    END_MIDDLE_OF_GRILL,
+    END_BOTTOM_OF_GRILL
 };
-
 
 class Path
 {
 public:
     Path();
-    void continueAfterTurn();
-    void selectBCDirection();
-    Position findStartingPosition();
-    void finishPathFromB();
-    void finishPathFromGrill();
     void doPath();
-    void finishDelFlag();
-    void delHPostFlag();
-    void pathFoundGrillFlag();
-    void doPathFromBToD();
-    void doPathFromDToJ();
-    void doPathFromAToB();
-    void doPathFromJtoGrill();
-    void doFirstHalfGrill();
-    void doSecondHalfGrill();
-    void doPathFromGrillToA();
 
 private:
     Robot &robot_;
     Position currentPosition_ = Position::START;
     uint8_t buttonPressMemory_[2] = {0};
-    bool hPostFlag = false;
+
+    void finishPathFromB();
+    void finishPathFromGrill();
+
+    void doPathFromBToD();
+    void doPathFromDToJ();
+    void doPathFromAToB();
+    void doPathFromJtoGrill();
+    void doPathFromGrillToA();
+    void doFirstHalfGrill();
+    void doSecondHalfGrill();
+    void doSecondHalfGrillFromTop();
+    void doSecondHalfGrillFromMiddle();
+    void doSecondHalfGrillFromBottom();
+
+    void continueAfterTurn();
+    void continueAfterTurnLong();
+
+    void selectBCDirection();
+    Position findStartingPosition();
+
+    void showPathIsFinished();
+    void ShowIfObstacleDetected(bool obstacleWasDetected);
 };
 #endif

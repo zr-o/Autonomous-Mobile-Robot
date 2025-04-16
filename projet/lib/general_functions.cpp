@@ -2,7 +2,7 @@
 
 void variableDelayMs(uint16_t delay)
 {
-    for (uint16_t i = 0; i < (delay / 10); i++)
+    for (uint16_t i = 0; i < (delay / DELAY_MS_10); i++)
     {
         _delay_ms(DELAY_MS_10);
     }

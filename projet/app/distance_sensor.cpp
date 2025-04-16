@@ -20,7 +20,6 @@ uint16_t DistanceSensor::readDistance()
         _delay_ms(MINIMUM_DELAY_BETWEEN_MEASURES);
     }
 
-    // Sort using bubble sort (ascending order)
     for (uint8_t i = 0; i < AMOUNT_OF_DISTANCES_5 - 1; i++)
     {
         for (uint8_t j = 0; j < AMOUNT_OF_DISTANCES_5 - i - 1; j++)
@@ -34,7 +33,6 @@ uint16_t DistanceSensor::readDistance()
         }
     }
 
-    // Return the median (middle value in sorted array)
     return distances[MEDIAN];
 }
 

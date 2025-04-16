@@ -1,6 +1,6 @@
 #include "debug.h"
 
-static const uint8_t MAX_BUFFER_SIZE = 50; // Dont use too much memory
+static const uint8_t MAX_BUFFER_SIZE = 50;
 
 void Debug::display(const char *message)
 {
