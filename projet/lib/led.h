@@ -1,3 +1,17 @@
+/*
+Giovanni Marven Alcena  
+Adam Azrou  
+Elliot Gareau  
+Anis Feteh Benabderrahmane  
+
+Permet d’allumer une DEL bicolore (rouge/verte) via deux broches du microcontrôleur ATmega324PA.  
+16 avril 2025 
+
+Composantes :  
+Utilisation de deux broches pour contrôler une DEL bicolore.  
+(Voir ports.h pour la configuration des broches)  
+*/
+
 #ifndef LED_H
 #define LED_H
 

@@ -1,3 +1,17 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Permet de mettre les ports ou les pins souhaites en mode ecriture ou lecture.
+Ainsi que lire ou ecrire une valeur sur les ports ou les pins voulus.
+16 avril 2025
+
+Composantes : 
+Ports A,B,C et D du microcontrolleur.
+*/
+
 #ifndef PORTS_H
 #define PORTS_H
 

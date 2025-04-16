@@ -1,3 +1,13 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Definitions communes pour le mode d'utilisation des timer0, timer1 et timer2.
+16 mars 2025
+*/
+
 #ifndef TIMER_DEFINITIONS_H
 #define TIMER_DEFINITIONS_H
 

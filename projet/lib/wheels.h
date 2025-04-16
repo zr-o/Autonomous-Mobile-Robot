@@ -1,3 +1,20 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Permet de choisir la direction des roues selon une vitesse avec ou sans delai. Possibilite de tourner sur place a gauche ou a droite.
+ Aussi de choisir une vitesse precise pour la roue souhaitee,ainsi que d'arretez completement les roues.
+
+16 avril 2025
+
+Composantes : 
+Deux roues
+Pin 5 à 8 du port D en sortie. (voir ports.h pour la configuration des fonctions).
+Timer2 utilise pour l'utilisation des delais en mode PWM (voir timer2.h).
+*/
+
 #ifndef WHEELS_H
 #define WHEELS_H
 

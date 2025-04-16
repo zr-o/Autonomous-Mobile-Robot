@@ -1,3 +1,17 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Un programme qui envoi ou recoit des messages (tableau de char) ou des variables (int) via le protocole RS232.
+16 avril 2025
+
+Composantes :
+UART à l'interieur du microcontrolleur
+Probablement un cable USB pour lire les valeurs
+*/
+
 #ifndef RS232_H
 #define RS232_H
 

@@ -1,3 +1,21 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+16 avril 2025
+
+Permet de suivre une ligne en ajustant la vitesse des roues à l’aide d’un algorithme PID.
+Détection des virages intelligents (gauche, droite) selon différents contextes d'arrêt, intersections ou absence de ligne.
+Utilise un délai (configurable par timer1) pour suivre la ligne pendant une durée précise. Peut aussi suivre ligne jusqu’à une condition donnée ou double condition.
+
+Composantes :
+Capteur makerLine (voir line_sensor.h)
+Moteurs et roues (voir wheels.h)
+Minuterie 16 bits pour les delais (voir timer1.h)
+*/
+
 #ifndef LINE_FOLLOWER_H
 #define LINE_FOLLOWER_H
 

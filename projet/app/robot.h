@@ -1,3 +1,24 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Description: un programme qui instancie tout les objets qui sont nécéssaires au robot pour le parcours c'est à dire 3 timers, 
+un can, des roues, un buzzer, un bouton interne, un bouton externe, une led, un capteur de distance un capteur de ligne et 
+un objet suiveur de ligne (voir line_follower.h)
+16 avril 2025
+
+Composantes :
+Deux minuteries 8 bits et 1 minuterie 16 bits (voir timer1, 2, 3)
+Un sensor de ligne (voir line_sensor.h)
+Un sensor de distance (voir distance_sensor.h)
+2 roues et moteurs (voir wheel.h)
+Un convertisseur analogique (voir can.h)
+2 boutons (voir button.h)
+Suivi de ligne (voir line_sensor.h)
+*/
+
 #ifndef ROBOT_H
 #define ROBOT_H
 

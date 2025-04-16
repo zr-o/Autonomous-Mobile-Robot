@@ -1,3 +1,13 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Definition des constantes  communes pour toutes les autres classes.
+16 avril 2025
+*/
+
 #ifndef LIB_DEFINES_H
 #define LIB_DEFINES_H
 

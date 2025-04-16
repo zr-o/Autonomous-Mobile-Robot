@@ -1,3 +1,17 @@
+/*
+Giovanni Marven Alcena
+Adam Azrou
+Elliot Gareau
+Anis Feteh Benabderrahmane
+
+Permet de mettre une minuterie sur le pin de son choix dans le port de son choix.
+La possibilite entre le mode CTC,PWM et NORMAL, et de choisir le pré-échelonneur voulu.
+Permet de choisir le mode de comparaison voulu, minuterie allant jusqu'a 8 bits.
+16 avril 2025
+
+Composantes : Minuterie 8 bits du microcontrolleur.
+*/
+
 #ifndef TIMER_2_H
 #define TIMER_2_H
 
