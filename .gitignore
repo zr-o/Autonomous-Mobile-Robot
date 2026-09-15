@@ -1,0 +1,16 @@
+# AVR build artifacts
+*.elf
+*.elf.map
+*.hex
+*.bin
+*.d
+*.o
+*.a
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor and local environment files
+.vscode/
