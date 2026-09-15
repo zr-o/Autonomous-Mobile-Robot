@@ -8,6 +8,8 @@ The source code is organized in `projet/app/`, with the embedded support library
 
 This project does not compile in a general-purpose environment. It targets a specific AVR microcontroller and requires the matching AVR toolchain, programmer, and robot hardware. Without that exact environment, compilation and execution are not expected to work.
 
+The source code comments are written in French, as this was the language chosen by the team when the project was developed.
+
 ## Team
 
 - Giovanni Marven Alcena
